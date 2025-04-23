@@ -11,7 +11,7 @@ lig_prot_yaml =""" defaults:
  output_path: {2}
  protein_inputs:
    A:
-     prot_file: {1}/{0}_prot.fasta
+     fasta_file: {1}/{0}_prot.fasta
  sm_inputs:
    B:
      input: {1}/{0}_lig.fasta

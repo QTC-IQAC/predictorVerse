@@ -4,6 +4,9 @@ Berta Bori Bru
 Utility functions
 """
 import os
+from rdkit import Chem # main tools
+from rdkit.Chem import AllChem # additional tools, including 3D
+
 
 
 class System:
@@ -81,10 +84,10 @@ def make_folder_structure(workspace_name="Galaxy42", workspace_path=".") -> None
 #     return mode
 
 
-def gen_fasta(system:System ,write_path:str, mode=None|str)-> None:
+def gen_fasta(system:System ,out_path:str, mode=None|str)-> None:
     """
     Generate fasta for system. Default structure is Chai-1 type
-    write_path: path were to write the fastas
+    out_path: path were to write the fastas
     mode = None (makes fasta with all the things in system). 
            protein (makes fasta of the protein only)
            ligand (makes fasta only of the ligand only)
@@ -95,9 +98,7 @@ def gen_fasta(system:System ,write_path:str, mode=None|str)-> None:
     elif mode.lower() == "ligand":  suffix = "_lig"
     else: raise ValueError("Mode is not correct. Should be None, protein or ligand.")
 
-
-
-    fasta_file = os.path.join(write_path,f"{system.name}{suffix}.fasta")
+    fasta_file = os.path.join(out_path,f"{system.name}{suffix}.fasta")
     
     fff = open(fasta_file,"w")
     
@@ -109,5 +110,20 @@ def gen_fasta(system:System ,write_path:str, mode=None|str)-> None:
 
     fff.close()
 
+def lig_smiles_to_sdf(system:System, out_path:str):
+    """
+    
+    """
+    sdf_file = os.path.join(out_path,f"{system.name}_lig.sdf")
+    
+    mol = Chem.MolFromSmiles(system.smiles) # initialize molecule
+
+    mol = Chem.AddHs(mol) # adding explicit Hs for 3D generation
+    cid = AllChem.EmbedMolecule(mol) # returns the id of the generated conformer,
+                                    # and -1 if no conformers were generated
+
+    AllChem.MMFFOptimizeMolecule(mol) # optimize molecule with MMFF94
+    writer = Chem.SDWriter(sdf_file) # Write in .sdf file
+    writer.write(mol)
 
     

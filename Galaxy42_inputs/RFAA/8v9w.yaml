@@ -5,7 +5,7 @@
  output_path: ./Galaxy42_outputs/RFAA
  protein_inputs:
    A:
-     prot_file: ./Galaxy42_inputs/RFAA/fastas/8v9w_prot.fasta
+     fasta_file: ./Galaxy42_inputs/RFAA/fastas/8v9w_prot.fasta
  sm_inputs:
    B:
      input: ./Galaxy42_inputs/RFAA/fastas/8v9w_lig.fasta

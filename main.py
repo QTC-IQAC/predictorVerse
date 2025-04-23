@@ -32,4 +32,6 @@ for system in system_list[:1]:
     gen_RFAA_input(system,workspace_prefx)
     gen_RFAA_runner(workspace_name)
 
+    uu.lig_smiles_to_sdf(system,".")
+
 print(len(system_list))
