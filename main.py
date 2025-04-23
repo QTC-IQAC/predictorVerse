@@ -13,6 +13,7 @@ import utils as uu
 import sys
 import os
 from RFAA import gen_RFAA_input, gen_RFAA_runner
+from boltz1 import gen_boltz_input, gen_boltz_runner
 
 input_csv = sys.argv[1]
 # provide output path input, if not, default to current path
@@ -29,9 +30,14 @@ system_list = uu.read_input_csv(input_csv)
 for system in system_list[:1]:
     print(system.name)
     # uu.gen_fasta(system,".",mode="protein")
-    gen_RFAA_input(system,workspace_prefx)
-    gen_RFAA_runner(workspace_name)
+    # gen_RFAA_input(system,workspace_prefx)
+    # gen_RFAA_runner(workspace_name)
 
-    uu.lig_smiles_to_sdf(system,".")
+    # uu.lig_smiles_to_sdf(system,".")
+
+    gen_boltz_input(system, workspace_prefx)
+    gen_boltz_runner(workspace_name)
+
+
 
 print(len(system_list))
