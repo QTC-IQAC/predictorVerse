@@ -4,18 +4,18 @@ import utils as uu
 from utils import System
 
 
-lig_prot_yaml =""" defaults:
- - base
- - _self_
- job_name: {0}
- output_path: {2}
- protein_inputs:
-   A:
-     fasta_file: {1}/{0}_prot.fasta
- sm_inputs:
-   B:
-     input: {1}/{0}_lig.fasta
-     input_type: 'smiles'
+lig_prot_yaml ="""defaults:
+- base
+- _self_
+job_name: {0}
+output_path: {2}
+protein_inputs:
+  A:
+    fasta_file: {1}/{0}_prot.fasta
+sm_inputs:
+  B:
+    input: {1}/{0}_lig.sdf
+    input_type: 'sdf'
 """
 #.format(system.name, fastas_dir, output_dir)
 
@@ -42,9 +42,9 @@ def gen_RFAA_input(system: System, workspace:str) -> None:
     os.makedirs(yamls_dir,exist_ok=True)
     os.makedirs(output_dir,exist_ok=True)
 
-    # Generate a fasta for protein and ligand (in fasta folder in RFAA)
+    # Generate a fasta for protein and and sdf for the ligand (in fasta folder in RFAA)
     uu.gen_fasta(system, fastas_dir, mode="protein")
-    uu.gen_fasta(system, fastas_dir, mode="ligand")
+    uu.lig_smiles_to_sdf(system, fastas_dir)
 
     # Generate yaml
     yaml_file = os.path.join(yamls_dir, system.name+".yaml")

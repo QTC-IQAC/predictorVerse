@@ -10,6 +10,7 @@
 #SBATCH --gres=gpu:1
 
 echo "%%%%%%%%%%%% $(date) %%%%%%%%%%%%%"
+cwd=$(pwd)
 
 inputs_dir=$cwd/Galaxy42_inputs/Boltz
 outputs_dir=$cwd/Galaxy42_outputs/Boltz
