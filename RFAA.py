@@ -54,6 +54,7 @@ def gen_RFAA_input(system: System, workspace:str) -> None:
 
 
 #TODO make a gestor for slurm options
+#TODO make it a job array
 runner_temp ="""#!/bin/bash
 #SBATCH -J {0}_RFAA
 #SBATCH -e %J.err
@@ -62,7 +63,7 @@ runner_temp ="""#!/bin/bash
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --partition=short
+#SBATCH --partition=long
 #SBATCH --gres=gpu:1
 ##SBATCH --constraint=gpu8
 
