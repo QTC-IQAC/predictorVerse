@@ -75,6 +75,10 @@ echo "Starting RFAA..."
 cd /home/ramon/progs/RoseTTAFold-All-Atom  # path to the directory where RFAA is installed
 
 for input_file in $inputs_dir/*.yaml; do 
+    # Change the relative path for absolute ones (will need to run this from the folder before Galaxy42_inputs)
+    sed -i "s|\./|$cwd/|g" $file
+
+
     # Split input file into file name and folder
     filename=$(basename "$input_file")
     foldername=$(dirname "$input_file")
