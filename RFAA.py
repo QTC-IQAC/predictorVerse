@@ -53,7 +53,7 @@ def gen_RFAA_input(system: System, workspace:str) -> None:
         yy.write(yaml_str)
 
 
-#TODO make a gestor for slurm options
+# TODO make a gestor for slurm options
 #TODO make it a job array
 runner_temp ="""#!/bin/bash
 #SBATCH -J {0}_RFAA

@@ -14,6 +14,7 @@ import sys
 import os
 from RFAA import gen_RFAA_input, gen_RFAA_runner
 from boltz1 import gen_boltz_input, gen_boltz_runner
+from omegafold import gen_of_input, gen_of_runner
 
 input_csv = sys.argv[1]
 # provide output path input, if not, default to current path
@@ -27,14 +28,17 @@ workspace_prefx = os.path.join(workspace_path, workspace_name) # TODO: fix this 
 uu.make_folder_structure(workspace_name=workspace_name)
 system_list = uu.read_input_csv(input_csv)
 
-for system in system_list[:]:
-    print(system.name)
-    # uu.gen_fasta(system,".",mode="protein")
-    try:
-        gen_RFAA_input(system,workspace_prefx)
-    except: 
-        continue
-gen_RFAA_runner(workspace_name)
+gen_of_input(system_list,workspace_prefx)
+gen_of_runner(workspace_name)
+
+# for system in system_list[:]:
+#     print(system.name)
+#     # uu.gen_fasta(system,".",mode="protein")
+#     try:
+#         gen_RFAA_input(system,workspace_prefx)
+#     except: 
+#         continue
+# gen_RFAA_runner(workspace_name)
 
     # uu.lig_smiles_to_sdf(system,".")
 
