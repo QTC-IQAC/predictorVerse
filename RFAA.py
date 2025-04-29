@@ -1,7 +1,7 @@
 import sys
 import os
 import utils as uu
-from utils import System
+from utils import System, Workpath
 
 
 lig_prot_yaml ="""defaults:
@@ -21,7 +21,7 @@ sm_inputs:
 
 
 
-def gen_RFAA_input(system: System, workspace:str) -> None:
+def gen_RFAA_input(system: System, workspace:Workpath, paths:list) -> None:
     """
     Generate RFAA yaml inputs
 
@@ -33,22 +33,15 @@ def gen_RFAA_input(system: System, workspace:str) -> None:
     """
     
     # Handle input/output directories
-    fastas_dir = os.path.join(workspace+"_inputs","RFAA","fastas")
-    yamls_dir = os.path.join(workspace+"_inputs","RFAA")
-    output_dir = os.path.join(workspace+"_outputs","RFAA")
-    
-    # TODO: generalize this in utils
-    os.makedirs(fastas_dir,exist_ok=True)
-    os.makedirs(yamls_dir,exist_ok=True)
-    os.makedirs(output_dir,exist_ok=True)
+    fastas_dir, fastas_dir_unix, output_dir_unix = paths
 
     # Generate a fasta for protein and and sdf for the ligand (in fasta folder in RFAA)
     uu.gen_fasta(system, fastas_dir, mode="protein")
     uu.lig_smiles_to_sdf(system, fastas_dir)
 
     # Generate yaml
-    yaml_file = os.path.join(yamls_dir, system.name+".yaml")
-    yaml_str = lig_prot_yaml.format(system.name, fastas_dir, output_dir)
+    yaml_file = os.path.join(workspace.inputs_predictor, system.name+".yaml")
+    yaml_str = lig_prot_yaml.format(system.name, fastas_dir_unix, output_dir_unix)
     with open(yaml_file,"w") as yy:
         yy.write(yaml_str)
 
@@ -56,7 +49,7 @@ def gen_RFAA_input(system: System, workspace:str) -> None:
 # TODO make a gestor for slurm options
 #TODO make it a job array
 runner_temp ="""#!/bin/bash
-#SBATCH -J {0}_RFAA
+#SBATCH -J RFAA
 #SBATCH -e %J.err
 #SBATCH -o %J.out
 #SBATCH --nodes=1
@@ -69,7 +62,7 @@ runner_temp ="""#!/bin/bash
 
 cwd=$(pwd)
 echo $cwd
-inputs_dir=$cwd/{1}
+inputs_dir=$cwd/{0}
 
 echo "Starting RFAA..."
 
@@ -92,11 +85,35 @@ cd $cwd
 """
 #.format(workspace)
 
-def gen_RFAA_runner(workspace:str) -> None:
-    runner_file = os.path.join(workspace+"_inputs","runners","RFAA_runner.sh")
-    rfaa_dir = workspace+"_inputs/RFAA" #done manually because this is for cluster in Linux
+def gen_RFAA_runner(workspace:Workpath) -> None:
+    runner_file = os.path.join(workspace.runners,"RFAA_runner.sh")
 
-    runner_str = runner_temp.format(workspace,rfaa_dir)
+    runner_str = runner_temp.format(workspace.inputs_predictor_unix)
     
     with open(runner_file,"w") as rr:
         rr.write(runner_str)
+
+
+def main(system_list:System, workpath:Workpath):
+    # Change current predictor in in Workpath
+    workpath.predictor = "RFAA"
+
+    # Create directories
+    os.makedirs(workpath.inputs_predictor,exist_ok=True)
+    os.makedirs(workpath.outputs_predictor,exist_ok=True)
+
+    fastas_dir = os.path.join(".",workpath.inputs_predictor,"fastas")
+    fastas_dir_unix = "./"+workpath.inputs_predictor_unix+"/fastas"
+    output_dir_unix = "./"+workpath.outputs_predictor_unix
+
+    path_list = [fastas_dir,fastas_dir_unix,output_dir_unix]
+    
+    os.makedirs(fastas_dir,exist_ok=True)
+
+    # Generate input
+    for system in system_list:
+      gen_RFAA_input(system, workpath, path_list)
+
+    # Generate runner
+    gen_RFAA_runner(workpath)
+    
