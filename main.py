@@ -14,22 +14,19 @@ import sys
 import os
 from RFAA import gen_RFAA_input, gen_RFAA_runner
 from boltz1 import gen_boltz_input, gen_boltz_runner
-from omegafold import gen_of_input, gen_of_runner
+from omegafold import gen_of_input, gen_of_runner, main
 
 input_csv = sys.argv[1]
 # provide output path input, if not, default to current path
 #workspace_name = str: default Galaxy_42
 
-workspace_name = "Galaxy42"
-workspace_path = "."
-workspace_prefx = os.path.join(workspace_path, workspace_name) # TODO: fix this ugly thing with the paths (make them global ??)
+workspace_name = "Galaxy43"
 
 
-uu.make_folder_structure(workspace_name=workspace_name)
 system_list = uu.read_input_csv(input_csv)
 
-gen_of_input(system_list,workspace_prefx)
-gen_of_runner(workspace_name)
+# gen_of_input(system_list,workspace_prefx)
+# gen_of_runner(workspace_name)
 
 # for system in system_list[:]:
 #     print(system.name)
@@ -45,6 +42,8 @@ gen_of_runner(workspace_name)
 #     gen_boltz_input(system, workspace_prefx)
 # gen_boltz_runner(workspace_name)
 
+ww = uu.Workpath(workspace_name)
 
+main(system_list,ww)
 
-print(len(system_list))
+# print(len(system_list))

@@ -1,19 +1,14 @@
 import os
-from utils import System
+from utils import System, Workpath
 
 
-def gen_of_input(system_list:list[System], workspace:str)-> None:
+def gen_of_input(system_list:list[System], workspace:Workpath)-> None:
     """
     Generate a fasta for all the proteins in system.
     OF is only a predictor for proteins. 
     """
-    inputs_dir = os.path.join(workspace+"_inputs","OmegaFold")
-    output_dir = os.path.join(workspace+"_outputs","OmegaFold")
 
-    os.makedirs(inputs_dir,exist_ok=True)
-    os.makedirs(output_dir,exist_ok=True)
-    
-    fasta_file = os.path.join(inputs_dir,"OF_input.fasta")
+    fasta_file = os.path.join(workspace.inputs_predictor,"OF_input.fasta")
 
     with open(fasta_file, "w") as oo:
         for system in system_list:
@@ -41,15 +36,27 @@ omegafold $input $output_dir
 #.format(inputs_dir,outputs_dir)
 
 
-def gen_of_runner(workspace:str) -> None:
-    inputs_dir = workspace+"_inputs/OmegaFold"
-    outputs_dir = workspace+"_outputs/OmegaFold"
-    runner_file = os.path.join(workspace+"_inputs","runners","OF_runner.sh")
+def gen_of_runner(workspace:Workpath) -> None:
+    
+    runner_file = os.path.join(workspace.runners,"OF_runner.sh")
 
-    # TODO: generalize this in utils
 
-    runner_str = of_runner_temp.format(inputs_dir,outputs_dir)
+    runner_str = of_runner_temp.format(workspace.inputs_predictor_unix,
+                                       workspace.outputs_predictor_unix)
     
     with open(runner_file,"w") as rr:
         rr.write(runner_str)
-   
+
+def main(system_list:System, workpath:Workpath):
+    # Change current predictor in in Workpath
+    workpath.predictor = "OmegaFold"
+
+    # Create directories
+    os.makedirs(workpath.inputs_predictor,exist_ok=True)
+    os.makedirs(workpath.outputs_predictor,exist_ok=True)
+
+    # Generate input
+    gen_of_input(system_list, workpath)
+
+    # Generate runner
+    gen_of_runner(workpath)

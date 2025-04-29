@@ -15,6 +15,41 @@ class System:
         self.seq = seq #protein sequence
         self.smiles = smiles #smiles sequence
 
+class Workpath:
+    def __init__(self, name, pred=""):
+        self.name = name
+        self.inputs = self.name+"_inputs"
+        self.outputs = self.name+"_outputs"
+        self.runners = os.path.join(self.name+"_inputs","runners")
+
+        os.makedirs(self.inputs,exist_ok=True)
+        os.makedirs(self.runners,exist_ok=True)
+        os.makedirs(self.outputs,exist_ok=True)
+        
+        self.predictor = pred
+
+        # @property
+        # def predictor(self):
+        #     return self._predictor
+
+    @property
+    def inputs_predictor(self):
+        return os.path.join(self.inputs,self.predictor)
+    
+    @property
+    def inputs_predictor_unix(self):
+        return self.inputs+"/"+self.predictor
+    
+    @property
+    def outputs_predictor(self):
+        return os.path.join(self.outputs,self.predictor)
+    
+    @property
+    def outputs_predictor_unix(self):
+        return self.outputs+"/"+self.predictor
+        
+
+
 def read_fasta(fasta_file: str) -> tuple:
     pass
 
@@ -33,22 +68,6 @@ def read_input_csv(csv_file: str, sep=",") -> list:
             system_list.append(System(name,seq,smiles))
     
     return system_list
-
-def make_folder_structure(workspace_name="Galaxy42", workspace_path=".") -> None : #TODO: migrate defaults to argparse
-    """
-    Make folders to store inputs, outputs and runners for the predictors
-    """
-    inputs_dir = os.path.join(workspace_path, workspace_name+"_inputs")
-    runner_dir = os.path.join(workspace_path, workspace_name+"_inputs","runners")
-    outputs_dir = os.path.join(workspace_path, workspace_name+"_outputs")
-
-    os.makedirs(inputs_dir,exist_ok=True)
-    os.makedirs(runner_dir,exist_ok=True)
-    os.makedirs(outputs_dir,exist_ok=True)
-
-    #TODO: would be cool if it created subfolders only for the predictors you use
-            
-    return workspace_name
 
 
 # def checkSeqType(seq:str) -> str:
@@ -125,5 +144,3 @@ def lig_smiles_to_sdf(system:System, out_path:str):
     AllChem.MMFFOptimizeMolecule(mol) # optimize molecule with MMFF94
     writer = Chem.SDWriter(sdf_file) # Write in .sdf file
     writer.write(mol)
-
-    
