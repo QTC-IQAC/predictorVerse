@@ -12,9 +12,10 @@ You will execute this via command line and give
 import utils as uu
 import sys
 import os
-from RFAA import gen_RFAA_input, gen_RFAA_runner,main
+from RFAA import gen_RFAA_input, gen_RFAA_runner
 from boltz1 import gen_boltz_input, gen_boltz_runner
 from omegafold import gen_of_input, gen_of_runner
+from af3 import main
 
 input_csv = sys.argv[1]
 # provide output path input, if not, default to current path

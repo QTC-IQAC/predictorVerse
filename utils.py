@@ -50,9 +50,6 @@ class Workpath:
         
 
 
-def read_fasta(fasta_file: str) -> tuple:
-    pass
-
 def read_input_csv(csv_file: str, sep=",") -> list:
     """
     Read a .csv to extract info of the systems to write
@@ -65,6 +62,7 @@ def read_input_csv(csv_file: str, sep=",") -> list:
         
         for sys in ff.readlines():
             name,seq,smiles = sys.split(sep)
+            smiles = smiles.strip()
             system_list.append(System(name,seq,smiles))
     
     return system_list

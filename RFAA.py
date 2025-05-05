@@ -42,6 +42,7 @@ def gen_RFAA_input(system: System, workspace:Workpath, paths:list) -> None:
     # Generate yaml
     yaml_file = os.path.join(workspace.inputs_predictor, system.name+".yaml")
     yaml_str = lig_prot_yaml.format(system.name, fastas_dir_unix, output_dir_unix)
+    
     with open(yaml_file,"w") as yy:
         yy.write(yaml_str)
 
@@ -94,7 +95,7 @@ def gen_RFAA_runner(workspace:Workpath) -> None:
         rr.write(runner_str)
 
 
-def main(system_list:System, workpath:Workpath):
+def main(system_list:list[System], workpath:Workpath):
     # Change current predictor in in Workpath
     workpath.predictor = "RFAA"
 
