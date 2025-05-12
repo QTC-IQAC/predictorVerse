@@ -26,7 +26,7 @@ workspace_name = "Galaxy42"
 
 system_list = uu.read_input_csv(input_csv)
 
-ww = uu.Workpath(workspace_name)
+ww = uu.Workspace(workspace_name)
 
 main(system_list,ww)
 

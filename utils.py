@@ -15,7 +15,7 @@ class System:
         self.seq = seq #protein sequence
         self.smiles = smiles #smiles sequence
 
-class Workpath:
+class Workspace:
     def __init__(self, name, pred=""):
         self.name = name
         self.inputs = self.name+"_inputs"

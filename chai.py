@@ -3,7 +3,7 @@ Berta Bori Bru - IQAC-CSIC
 Spring 2025
 """
 import os
-from utils import System, Workpath, gen_fasta
+from utils import System, Workspace, gen_fasta
 
 
 chai_runner_template = """ #!/bin/bash
@@ -20,28 +20,28 @@ for file in $inputs_folder/*.fasta;
 done
 
 """
-# .format(workpath.inputs_predictor_unix, workpath.outputs_predictor_unix )
+# .format(workspace.inputs_predictor_unix, workspace.outputs_predictor_unix )
 
-def gen_chai_runner(workpath:Workpath) -> None:
-    runner_file = os.path.join(workpath.runners,"Chai_runner.sh")
+def gen_chai_runner(workspace:Workspace) -> None:
+    runner_file = os.path.join(workspace.runners,"Chai_runner.sh")
 
-    runner_str = chai_runner_template.format(workpath.inputs_predictor_unix, workpath.outputs_predictor_unix)
+    runner_str = chai_runner_template.format(workspace.inputs_predictor_unix, workspace.outputs_predictor_unix)
     
     with open(runner_file,"w") as rr:
         rr.write(runner_str)
 
 
-def main(system_list:System, workpath:Workpath)-> None:
-    # Change current predictor in in Workpath
-    workpath.predictor = "Chai"
+def main(system_list:System, workspace:Workspace)-> None:
+    # Change current predictor in in Workspace
+    workspace.predictor = "Chai"
 
     # Create directories
-    os.makedirs(workpath.inputs_predictor,exist_ok=True)
-    os.makedirs(workpath.outputs_predictor,exist_ok=True)
+    os.makedirs(workspace.inputs_predictor,exist_ok=True)
+    os.makedirs(workspace.outputs_predictor,exist_ok=True)
 
     # Generate input (the default fasta file)
     for system in system_list:
-        gen_fasta(system, workpath.inputs_predictor,mode=None)
+        gen_fasta(system, workspace.inputs_predictor,mode=None)
 
     # Generate runner
-    gen_chai_runner(workpath)
+    gen_chai_runner(workspace)

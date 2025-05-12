@@ -1,5 +1,5 @@
 import os
-from utils import System, Workpath
+from utils import System, Workspace
 
 
 # Double braces to not confuse with {0}
@@ -71,7 +71,7 @@ singularity exec  \\
 
 """
 # Double / to avoid writing in the same line everything and make it more readable
-#.format(workpath.inputs_predictor_unix, workpath.outputs_predictor_unix)
+#.format(workspace.inputs_predictor_unix, workspace.outputs_predictor_unix)
 
 af3_jobarray_template="""#!/bin/bash
 #SBATCH --job-name=AF3
@@ -109,7 +109,7 @@ esac
 #.format(num_of_jobs,max_num_of_jobs_running_at_the_same_time)
 
 
-def gen_af3_input(system:System, workspace:Workpath)-> None:
+def gen_af3_input(system:System, workspace:Workspace)-> None:
     """
     Generate a fasta for all the proteins in system.
     OF is only a predictor for proteins. 
@@ -123,7 +123,7 @@ def gen_af3_input(system:System, workspace:Workpath)-> None:
 
 
 
-def gen_af3_runner(workspace:Workpath) -> None:
+def gen_af3_runner(workspace:Workspace) -> None:
     runner_file = os.path.join(workspace.runners,"AF3_runner.sh")
 
     runner_str = af3_runner_template.format(workspace.inputs_predictor_unix, workspace.outputs_predictor_unix)
@@ -133,7 +133,7 @@ def gen_af3_runner(workspace:Workpath) -> None:
 
 
 
-def gen_af3_jobarray(system_list:list[System], workspace:Workpath, max_cap_jobs=None | int) -> None:
+def gen_af3_jobarray(system_list:list[System], workspace:Workspace, max_cap_jobs=None | int) -> None:
     """
     
     max_cap_jobs : max number of jobs that can run at the same time.
@@ -164,20 +164,20 @@ def gen_af3_jobarray(system_list:list[System], workspace:Workpath, max_cap_jobs=
             
 
 
-def main(system_list:list(System), workpath:Workpath):
-    # Change current predictor in in Workpath
-    workpath.predictor = "AF3"
+def main(system_list:list(System), workspace:Workspace):
+    # Change current predictor in in Workspace
+    workspace.predictor = "AF3"
 
     # Create directories
-    os.makedirs(workpath.inputs_predictor,exist_ok=True)
-    os.makedirs(workpath.outputs_predictor,exist_ok=True)
+    os.makedirs(workspace.inputs_predictor,exist_ok=True)
+    os.makedirs(workspace.outputs_predictor,exist_ok=True)
 
     # Generate input
     for system in system_list:
-      gen_af3_input(system, workpath)
+      gen_af3_input(system, workspace)
 
     # Generate runner
-    gen_af3_runner(workpath)
+    gen_af3_runner(workspace)
 
     # Generate jobarray
-    gen_af3_jobarray(system_list,workpath,max_cap_jobs=None)
+    gen_af3_jobarray(system_list,workspace,max_cap_jobs=None)

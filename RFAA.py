@@ -1,7 +1,7 @@
 import sys
 import os
 import utils as uu
-from utils import System, Workpath
+from utils import System, Workspace
 
 
 lig_prot_yaml ="""defaults:
@@ -21,7 +21,7 @@ sm_inputs:
 
 
 
-def gen_RFAA_input(system: System, workspace:Workpath, paths:list) -> None:
+def gen_RFAA_input(system: System, workspace:Workspace, paths:list) -> None:
     """
     Generate RFAA yaml inputs
 
@@ -86,7 +86,7 @@ cd $cwd
 """
 #.format(workspace)
 
-def gen_RFAA_runner(workspace:Workpath) -> None:
+def gen_RFAA_runner(workspace:Workspace) -> None:
     runner_file = os.path.join(workspace.runners,"RFAA_runner.sh")
 
     runner_str = runner_temp.format(workspace.inputs_predictor_unix)
@@ -95,17 +95,17 @@ def gen_RFAA_runner(workspace:Workpath) -> None:
         rr.write(runner_str)
 
 
-def main(system_list:list[System], workpath:Workpath):
-    # Change current predictor in in Workpath
-    workpath.predictor = "RFAA"
+def main(system_list:list[System], workspace:Workspace):
+    # Change current predictor in in Workspace
+    workspace.predictor = "RFAA"
 
     # Create directories
-    os.makedirs(workpath.inputs_predictor,exist_ok=True)
-    os.makedirs(workpath.outputs_predictor,exist_ok=True)
+    os.makedirs(workspace.inputs_predictor,exist_ok=True)
+    os.makedirs(workspace.outputs_predictor,exist_ok=True)
 
-    fastas_dir = os.path.join(".",workpath.inputs_predictor,"fastas")
-    fastas_dir_unix = "./"+workpath.inputs_predictor_unix+"/fastas"
-    output_dir_unix = "./"+workpath.outputs_predictor_unix
+    fastas_dir = os.path.join(".",workspace.inputs_predictor,"fastas")
+    fastas_dir_unix = "./"+workspace.inputs_predictor_unix+"/fastas"
+    output_dir_unix = "./"+workspace.outputs_predictor_unix
 
     path_list = [fastas_dir,fastas_dir_unix,output_dir_unix]
     
@@ -113,8 +113,8 @@ def main(system_list:list[System], workpath:Workpath):
 
     # Generate input
     for system in system_list:
-      gen_RFAA_input(system, workpath, path_list)
+      gen_RFAA_input(system, workspace, path_list)
 
     # Generate runner
-    gen_RFAA_runner(workpath)
+    gen_RFAA_runner(workspace)
     
