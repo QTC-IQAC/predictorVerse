@@ -1,6 +1,15 @@
 import os
 from utils import System, Workpath
 
+"""
+TODO: OF only produces 1 output. Make it so:
+    - We produce fasta for each system
+    - runner has loop like
+    for input file
+        <generate subfolder with system name>
+        for ii in {1..10}
+            <run omegafold>
+"""
 
 def gen_of_input(system_list:list[System], workspace:Workpath)-> None:
     """

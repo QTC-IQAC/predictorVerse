@@ -164,7 +164,7 @@ def gen_af3_jobarray(system_list:list[System], workspace:Workpath, max_cap_jobs=
             
 
 
-def main(system_list:System, workpath:Workpath):
+def main(system_list:list(System), workpath:Workpath):
     # Change current predictor in in Workpath
     workpath.predictor = "AF3"
 
