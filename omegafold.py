@@ -11,6 +11,9 @@ TODO: OF only produces 1 output. Make it so:
             <run omegafold>
 """
 
+of_fasta_template = """>{system.name}_prot
+{system.seq}"""
+
 def gen_of_input(system_list:list[System], workspace:Workspace)-> None:
     """
     Generate a fasta for all the proteins in system.
@@ -69,3 +72,11 @@ def main(system_list:System, workspace:Workspace):
 
     # Generate runner
     gen_of_runner(workspace)
+
+of_data = {"name": "OF",
+            "prot_temp": of_fasta_template
+            "lig_temp": ""
+            "prot_lig_temp": of_fasta_template,
+            "input_extension": ".fasta",
+            # "runner_temp":
+}

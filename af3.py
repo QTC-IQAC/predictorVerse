@@ -4,19 +4,19 @@ from utils import System, Workspace
 
 # Double braces to not confuse with {0}
 af3_json_template = """{{
-    "name": "{0}",
+    "name": "{system.name}",
     "modelSeeds": [10, 42],
     "sequences": [
       {{
         "protein": {{
           "id": "A",
-          "sequence": "{1}"
+          "sequence": "{system.seq}"
         }}
       }},
       {{
         "ligand": {{
           "id": "B",
-          "smiles": "{2}"
+          "smiles": "{system.smiles}"
         }}
       }}
     ],
@@ -112,7 +112,6 @@ esac
 def gen_af3_input(system:System, workspace:Workspace)-> None:
     """
     Generate a fasta for all the proteins in system.
-    OF is only a predictor for proteins. 
     """
 
     input_file = os.path.join(workspace.inputs_predictor,system.name+".json")
@@ -164,7 +163,7 @@ def gen_af3_jobarray(system_list:list[System], workspace:Workspace, max_cap_jobs
             
 
 
-def main(system_list:list(System), workspace:Workspace):
+def main(system_list:list[System], workspace:Workspace):
     # Change current predictor in in Workspace
     workspace.predictor = "AF3"
 
@@ -181,3 +180,12 @@ def main(system_list:list(System), workspace:Workspace):
 
     # Generate jobarray
     gen_af3_jobarray(system_list,workspace,max_cap_jobs=None)
+
+
+af3_data = {"name": "AF3",
+            # "prot_temp": 
+            # "lig_temp": 
+            "prot_lig_temp": af3_json_template,
+            "input_extension": ".json",
+            # "runner_temp":
+}

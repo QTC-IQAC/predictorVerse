@@ -4,17 +4,17 @@ import utils as uu
 from utils import System, Workspace
 
 
-lig_prot_yaml ="""defaults:
+rfaa_yaml_template ="""defaults:
 - base
 - _self_
-job_name: {0}
-output_path: {2}
+job_name: {system.name}
+output_path: ./{workspace.outputs_predictor_unix}
 protein_inputs:
   A:
-    fasta_file: {1}/{0}_prot.fasta
+    fasta_file: ./{workspace.inputs_predictor_unix}/fastas/{system.name}_prot.fasta
 sm_inputs:
   B:
-    input: {1}/{0}_lig.sdf
+    input: ./{workspace.inputs_predictor_unix}/fastas/{system.name}_lig.sdf
     input_type: 'sdf'
 """
 #.format(system.name, fastas_dir, output_dir)
@@ -41,7 +41,7 @@ def gen_RFAA_input(system: System, workspace:Workspace, paths:list) -> None:
 
     # Generate yaml
     yaml_file = os.path.join(workspace.inputs_predictor, system.name+".yaml")
-    yaml_str = lig_prot_yaml.format(system.name, fastas_dir_unix, output_dir_unix)
+    yaml_str = rfaa_yaml_template.format(system.name, fastas_dir_unix, output_dir_unix)
     
     with open(yaml_file,"w") as yy:
         yy.write(yaml_str)
@@ -118,3 +118,10 @@ def main(system_list:list[System], workspace:Workspace):
     # Generate runner
     gen_RFAA_runner(workspace)
     
+rfaa_data = {"name": "RFAA",
+            # "prot_temp": 
+            # "lig_temp": 
+            "prot_lig_temp": rfaa_yaml_template,
+            "input_extension": ".yaml",
+            # "runner_temp":
+}

@@ -5,6 +5,15 @@ Spring 2025
 import os
 from utils import System, Workspace, gen_fasta
 
+chai_prot_fasta = """>protein|{system.name}_prot
+{system.seq}
+"""
+
+chai_lig_fasta = """>ligand|{system.name}_lig
+{system.smiles}
+"""
+
+chai_fasta_template = chai_prot_fasta + chai_lig_fasta
 
 chai_runner_template = """ #!/bin/bash
 
@@ -45,3 +54,11 @@ def main(system_list:System, workspace:Workspace)-> None:
 
     # Generate runner
     gen_chai_runner(workspace)
+
+chai_data = {"name": "Chai-1",
+            "prot_temp": chai_prot_fasta
+            "lig_temp": chai_lig_fasta
+            "prot_lig_temp": chai_fasta_template,
+            "input_extension": ".fasta",
+            # "runner_temp":
+}

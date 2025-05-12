@@ -68,38 +68,6 @@ def read_input_csv(csv_file: str, sep=",") -> list:
     return system_list
 
 
-# def checkSeqType(seq:str) -> str:
-#     """
-#     Checks is the sequence corresponds to RNA, DNA, protein or ligand (SMILES) type
-#     This program is only able to identify basic types of sequences and large SMILES.
-#     Check afterwards if the program has identified the type correctly.
-
-#     Parameters:
-#         seq: string with the sequence to identify
-
-#     Returns
-#         mode: identified type of the sequence
-#     """
-#     # Convert sequence to list
-#     seq_list = list(seq)
-
-#     # Definition of characteristic characters of each sequence
-#     smiles = list("=#:+-[]()/\@.%1234567890")
-#     rna=list("AUGC")
-#     dna=list("ATGC")
-
-#     # Check if the sequence is RNA, DNA or ligand (SMILES)
-#     if all(char1 in rna for char1 in seq_list):
-#         mode="rna"
-#     elif all(char1 in dna for char1 in seq_list):
-#         mode="dna"
-#     elif any(char1 in smiles for char1 in seq_list) or len(seq_list)<50:
-#         mode="ligand"
-#     else:
-#         mode="protein"
-
-#     return mode
-
 
 def gen_fasta(system:System ,out_path:str, mode=None|str)-> None:
     """
@@ -142,3 +110,16 @@ def lig_smiles_to_sdf(system:System, out_path:str):
     AllChem.MMFFOptimizeMolecule(mol) # optimize molecule with MMFF94
     writer = Chem.SDWriter(sdf_file) # Write in .sdf file
     writer.write(mol)
+
+def gen_input(system:System, workspace: Workspace, input_txt: str, input_extension: str) -> None:
+    """
+    input_text: text of the input. formated with system and workspace attributes
+    input_extension: extension of the file. Ex: ".json", ".fasta"
+    """
+
+    input_file = os.path.join(workspace.inputs_predictor,system.name+input_extension)
+    input_str = af3_json_template.format(system=system, workspace=workspace)
+    
+    with open(input_file, "w") as file:
+        file.write(input_str)
+

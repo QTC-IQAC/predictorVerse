@@ -10,8 +10,9 @@ boltz_prot_fasta = """>A|protein||{system.name}_prot
 """
 
 boltz_lig_fasta = """>B|smiles||{system.name}_lig
-{system.smiles}
-"""
+{system.smiles}"""
+
+boltz_fasta_template = boltz_prot_fasta + boltz_lig_fasta
     
 def gen_boltz_input(system:System , workspace:Workspace)-> None:
     """
@@ -79,3 +80,11 @@ def main(system_list: list[System], workspace: Workspace):
 
     # Generate runner
     gen_boltz_runner(workspace)
+
+boltz_data = {"name": "Boltz",
+            "prot_temp": boltz_prot_fasta 
+            "lig_temp": boltz_lig_fasta
+            "prot_lig_temp": boltz_fasta_template,
+            "input_extension": ".fasta",
+            # "runner_temp":
+}
