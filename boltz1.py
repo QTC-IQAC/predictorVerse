@@ -82,8 +82,8 @@ def main(system_list: list[System], workspace: Workspace):
     gen_boltz_runner(workspace)
 
 boltz_data = {"name": "Boltz",
-            "prot_temp": boltz_prot_fasta 
-            "lig_temp": boltz_lig_fasta
+            "prot_temp": boltz_prot_fasta,
+            "lig_temp": boltz_lig_fasta,
             "prot_lig_temp": boltz_fasta_template,
             "input_extension": ".fasta",
             # "runner_temp":

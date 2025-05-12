@@ -74,8 +74,8 @@ def main(system_list:System, workspace:Workspace):
     gen_of_runner(workspace)
 
 of_data = {"name": "OF",
-            "prot_temp": of_fasta_template
-            "lig_temp": ""
+            "prot_temp": of_fasta_template,
+            "lig_temp": "",
             "prot_lig_temp": of_fasta_template,
             "input_extension": ".fasta",
             # "runner_temp":

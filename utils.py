@@ -6,6 +6,7 @@ Utility functions
 import os
 from rdkit import Chem # main tools
 from rdkit.Chem import AllChem # additional tools, including 3D
+# from info import predictors_library
 
 
 
@@ -111,15 +112,36 @@ def lig_smiles_to_sdf(system:System, out_path:str):
     writer = Chem.SDWriter(sdf_file) # Write in .sdf file
     writer.write(mol)
 
-def gen_input(system:System, workspace: Workspace, input_txt: str, input_extension: str) -> None:
+def gen_input(system:System, workspace: Workspace, predictor_data:dict) -> None:
     """
-    input_text: text of the input. formated with system and workspace attributes
+    input_template: text of the input. formated with system and workspace attributes
     input_extension: extension of the file. Ex: ".json", ".fasta"
     """
+    input_extension = predictor_data["input_extension"]
+    input_template = predictor_data["prot_lig_temp"]
 
     input_file = os.path.join(workspace.inputs_predictor,system.name+input_extension)
-    input_str = af3_json_template.format(system=system, workspace=workspace)
+    input_str = input_template.format(system=system, workspace=workspace)
     
     with open(input_file, "w") as file:
         file.write(input_str)
 
+
+def check_predictor_exists(predictor_id_list: list[str], predictors_library: dict) -> list[str]: 
+    
+    pred_to_remove = []
+    
+    for predictor in predictor_id_list:
+        try:
+            aa = predictors_library[predictor]
+        except:
+            print(f"WARNING: {predictor} id has no data associated. Removing it from predictors list.")
+            pred_to_remove.appen(predictor)
+    
+    checked_predictors = [x for x in predictor_id_list if x not in pred_to_remove]
+
+    # Check if there is some predictor left
+    if len(checked_predictors) == 0: 
+        raise ValueError("There are no predictors. Cannot continue.")
+    
+    return checked_predictors

@@ -56,8 +56,8 @@ def main(system_list:System, workspace:Workspace)-> None:
     gen_chai_runner(workspace)
 
 chai_data = {"name": "Chai-1",
-            "prot_temp": chai_prot_fasta
-            "lig_temp": chai_lig_fasta
+            "prot_temp": chai_prot_fasta,
+            "lig_temp": chai_lig_fasta,
             "prot_lig_temp": chai_fasta_template,
             "input_extension": ".fasta",
             # "runner_temp":

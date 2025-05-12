@@ -9,42 +9,43 @@ You will execute this via command line and give
 - A place to dump the outputs
 """
 
-import utils as uu
+
+from utils import System, Workspace
+from utils import read_input_csv, check_predictor_exists, gen_input
 import sys
 import os
-# from RFAA import main
-from boltz1 import main
-# from omegafold import main
-# from chai import main
-# from af3 import main
+from info import predictors_library
 
+# Input arguments
 input_csv = sys.argv[1]
-# provide output path input, if not, default to current path
-#workspace_name = str: default Galaxy_42
+workspace_name = "GalaxyTEST" # TODO This will be a defalt with argparse
+input_predictors = ["AF3",
+              "RFAA",
+              "Chai",
+              "Boltz",
+              "OF"
+]
 
-workspace_name = "Galaxy42"
+# Read inputs
+system_list = read_input_csv(input_csv)
+workspace = Workspace(workspace_name)
+predictors_list = check_predictor_exists(input_predictors, predictors_library)
 
-system_list = uu.read_input_csv(input_csv)
+# Start doing things (TODO: put this in funcs)
+for predictor in predictors_list:
+    # Get predictor data
+    data = predictors_library[predictor]
 
-ww = uu.Workspace(workspace_name)
+    # Change current predictor in in Workspace
+    workspace.predictor = predictor
 
-main(system_list,ww)
+    # Create directories
+    os.makedirs(workspace.inputs_predictor,exist_ok=True)
+    os.makedirs(workspace.outputs_predictor,exist_ok=True)
 
-# print(len(system_list))
+    # Generate input (the default fasta file)
+    for system in system_list:
+        gen_input(system, workspace, data)
 
-# gen_of_input(system_list,workspace_prefx)
-# gen_of_runner(workspace_name)
-
-# for system in system_list[:]:
-#     print(system.name)
-#     # uu.gen_fasta(system,".",mode="protein")
-#     try:
-#         gen_RFAA_input(system,workspace_prefx)
-#     except: 
-#         continue
-# gen_RFAA_runner(workspace_name)
-
-    # uu.lig_smiles_to_sdf(system,".")
-
-#     gen_boltz_input(system, workspace_prefx)
-# gen_boltz_runner(workspace_name)
+    # # Generate runner
+    # gen_runner(workspace)
