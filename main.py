@@ -12,16 +12,16 @@ You will execute this via command line and give
 import utils as uu
 import sys
 import os
-from RFAA import gen_RFAA_input, gen_RFAA_runner
+from RFAA import gen_RFAA_input, gen_RFAA_runner, main
 from boltz1 import gen_boltz_input, gen_boltz_runner
 from omegafold import gen_of_input, gen_of_runner
-from af3 import main
+# from af3 import 
 
 input_csv = sys.argv[1]
 # provide output path input, if not, default to current path
 #workspace_name = str: default Galaxy_42
 
-workspace_name = "Galaxy43"
+workspace_name = "GalaxyAF3"
 
 
 system_list = uu.read_input_csv(input_csv)
