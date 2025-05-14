@@ -3,22 +3,29 @@ from utils import System, Workspace
 
 
 # Double braces to not confuse with {0}
-af3_json_template = """{{
-    "name": "{system.name}",
-    "modelSeeds": [10, 42],
-    "sequences": [
-      {{
+
+af3_prot_json = """      {{
         "protein": {{
           "id": "A",
           "sequence": "{system.seq}"
         }}
-      }},
-      {{
+      }}"""
+
+
+
+af3_lig_json = """      {{
         "ligand": {{
           "id": "B",
           "smiles": "{system.smiles}"
         }}
-      }}
+      }}"""
+
+
+af3_json_template = """{{
+    "name": "{system.name}",
+    "modelSeeds": [10, 42],
+    "sequences": [
+      {input}
     ],
     "dialect": "alphafold3",
     "version": 2
@@ -183,8 +190,9 @@ def main(system_list:list[System], workspace:Workspace):
 
 
 af3_data = {"name": "AF3",
-            # "prot_temp": 
-            # "lig_temp": 
+            "prot_temp": af3_prot_json,
+            "lig_temp": af3_lig_json,
+            "joiner":",\n",
             "prot_lig_temp": af3_json_template,
             "input_extension": ".json",
             # "runner_temp":

@@ -5,14 +5,9 @@ Spring 2025
 from utils import System, Workspace
 import os
 
-boltz_prot_fasta = """>A|protein||{system.name}_prot
-{system.seq}
-"""
-
-boltz_lig_fasta = """>B|smiles||{system.name}_lig
-{system.smiles}"""
-
-boltz_fasta_template = boltz_prot_fasta + boltz_lig_fasta
+boltz_prot_fasta = """>A|protein||{system.name}_prot\n{system.seq}"""
+boltz_lig_fasta = """>B|smiles||{system.name}_lig\n{system.smiles}"""
+boltz_fasta_template = """{protein}\n{ligand}"""
     
 def gen_boltz_input(system:System , workspace:Workspace)-> None:
     """

@@ -105,20 +105,23 @@ def gen_input(system:System, workspace: Workspace, predictor_data: dict, mode="a
     general_template = predictor_data["prot_lig_temp"]
     prot_template = predictor_data["prot_temp"]
     lig_template = predictor_data["lig_temp"]
+    joiner = predictor_data["joiner"]
 
     input_file = os.path.join(workspace.inputs_predictor,system.name+input_extension)
 
     if mode == "all":
         prot_text = prot_template.format(system=system,workspace=workspace)
         lig_text = lig_template.format(system=system,workspace=workspace)
+        inputs_to_join = [prot_text,lig_text]
     elif mode == "prot":
         prot_text = prot_template.format(system=system,workspace=workspace)
-        lig_text = ""
-
-    input_str = general_template.format(protein=prot_text, ligand=lig_text)
+        inputs_to_join = [prot_text]
+    
+    input_text = joiner.join(inputs_to_join)
+    final_input = general_template.format(input=input_text, system=system, workspace=workspace)
     
     with open(input_file, "w") as file:
-        file.write(input_str)
+        file.write(final_input)
 
     # If there are other functions (in predictor_data["other_funcs"]), execute them
     try:

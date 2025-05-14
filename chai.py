@@ -6,11 +6,9 @@ import os
 from utils import System, Workspace, gen_fasta
 
 chai_prot_fasta = """>protein|{system.name}_prot\n{system.seq}"""
-
 chai_lig_fasta = """>ligand|{system.name}_lig\n{system.smiles}"""
+chai_fasta_template = """{input}"""
 
-# chai_fasta_template = chai_prot_fasta + chai_lig_fasta
-chai_fasta_template = """{protein}\n{ligand}"""
 
 chai_runner_template = """ #!/bin/bash
 
@@ -55,6 +53,7 @@ def main(system_list:System, workspace:Workspace)-> None:
 chai_data = {"name": "Chai-1",
             "prot_temp": chai_prot_fasta,
             "lig_temp": chai_lig_fasta,
+            "joiner":"\n",
             "prot_lig_temp": chai_fasta_template,
             "input_extension": ".fasta",
             # "runner_temp":

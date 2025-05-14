@@ -10,9 +10,9 @@ TODO: OF only produces 1 output. Make it so:
         for ii in {1..10}
             <run omegafold>
 """
-
-of_fasta_template = """>{system.name}_prot
-{system.seq}"""
+of_prot_fasta = """>{system.name}_prot\n{system.seq}"""
+of_lig_fasta = ""
+of_fasta_template = """{protein}\n{ligand}"""
 
 def gen_of_input(system_list:list[System], workspace:Workspace)-> None:
     """
