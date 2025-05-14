@@ -4,8 +4,6 @@ Berta Bori Bru
 Utility functions
 """
 import os
-from rdkit import Chem # main tools
-from rdkit.Chem import AllChem # additional tools, including 3D
 # from info import predictors_library
 
 
@@ -96,23 +94,9 @@ def gen_fasta(system:System ,out_path:str, mode=None|str)-> None:
 
     fff.close()
 
-def lig_smiles_to_sdf(system:System, out_path:str):
-    """
-    
-    """
-    sdf_file = os.path.join(out_path,f"{system.name}_lig.sdf")
-    
-    mol = Chem.MolFromSmiles(system.smiles) # initialize molecule
 
-    mol = Chem.AddHs(mol) # adding explicit Hs for 3D generation
-    cid = AllChem.EmbedMolecule(mol) # returns the id of the generated conformer,
-                                    # and -1 if no conformers were generated
 
-    AllChem.MMFFOptimizeMolecule(mol) # optimize molecule with MMFF94
-    writer = Chem.SDWriter(sdf_file) # Write in .sdf file
-    writer.write(mol)
-
-def gen_input(system:System, workspace: Workspace, predictor_data:dict) -> None:
+def gen_input(system:System, workspace: Workspace, predictor_data: dict) -> None:
     """
     input_template: text of the input. formated with system and workspace attributes
     input_extension: extension of the file. Ex: ".json", ".fasta"
@@ -125,6 +109,15 @@ def gen_input(system:System, workspace: Workspace, predictor_data:dict) -> None:
     
     with open(input_file, "w") as file:
         file.write(input_str)
+
+    # If there are other functions (in predictor_data["other_funcs"]), execute them
+    try:
+        if predictor_data["other_funcs"] is not None:
+            for func in predictor_data["other_funcs"]:
+                func(system, workspace)
+    except:
+        print(f"WARNING: No other funcs were found for {predictor_data["name"]} or is not iterable. Skipping")
+
 
 
 def check_predictor_exists(predictor_id_list: list[str], predictors_library: dict) -> list[str]: 

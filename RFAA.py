@@ -3,6 +3,9 @@ import os
 import utils as uu
 from utils import System, Workspace
 
+from rdkit import Chem # main tools
+from rdkit.Chem import AllChem # additional tools, including 3D
+
 
 rfaa_yaml_template ="""defaults:
 - base
@@ -48,7 +51,7 @@ def gen_RFAA_input(system: System, workspace:Workspace, paths:list) -> None:
 
 
 # TODO make a gestor for slurm options
-#TODO make it a job array
+# TODO make it a job array
 runner_temp ="""#!/bin/bash
 #SBATCH -J RFAA
 #SBATCH -e %J.err
@@ -117,6 +120,39 @@ def main(system_list:list[System], workspace:Workspace):
 
     # Generate runner
     gen_RFAA_runner(workspace)
+
+
+def gen_prot_fasta(system: System, workspace: Workspace):
+    """
+    Generate fasta file for the protein
+    """
+    # Create fastas folder
+    fastas_dir = os.path.join(workspace.inputs_predictor,"fastas")
+    os.makedirs(fastas_dir,exist_ok=True)
+
+    # Generate protein fasta file
+    fasta_file = os.path.join(workspace.inputs_predictor,"fastas",f"{system.name}_prot.fasta")
+    
+    with open(fasta_file,"w") as fastaff:
+        fastaff.write(f">protein|{system.name}_prot\n{system.seq}\n")
+
+
+def lig_smiles_to_sdf(system:System, workspace: Workspace):
+    """
+    From ligand smiles generate a sdf file 
+    """
+    sdf_file = os.path.join(workspace.inputs_predictor,"fastas",f"{system.name}_lig.sdf")
+    
+    mol = Chem.MolFromSmiles(system.smiles) # initialize molecule
+
+    mol = Chem.AddHs(mol) # adding explicit Hs for 3D generation
+    cid = AllChem.EmbedMolecule(mol) # returns the id of the generated conformer,
+                                    # and -1 if no conformers were generated
+
+    AllChem.MMFFOptimizeMolecule(mol) # optimize molecule with MMFF94
+    writer = Chem.SDWriter(sdf_file) # Write in .sdf file
+    writer.write(mol)
+
     
 rfaa_data = {"name": "RFAA",
             # "prot_temp": 
@@ -124,4 +160,5 @@ rfaa_data = {"name": "RFAA",
             "prot_lig_temp": rfaa_yaml_template,
             "input_extension": ".yaml",
             # "runner_temp":
+            "other_funcs":[gen_prot_fasta, lig_smiles_to_sdf]
 }

@@ -33,6 +33,8 @@ predictors_list = check_predictor_exists(input_predictors, predictors_library)
 
 # Start doing things (TODO: put this in funcs)
 for predictor in predictors_list:
+    print(f"------{predictor}------")
+    
     # Get predictor data
     data = predictors_library[predictor]
 
