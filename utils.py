@@ -96,16 +96,26 @@ def gen_fasta(system:System ,out_path:str, mode=None|str)-> None:
 
 
 
-def gen_input(system:System, workspace: Workspace, predictor_data: dict) -> None:
+def gen_input(system:System, workspace: Workspace, predictor_data: dict, mode="all") -> None:
     """
     input_template: text of the input. formated with system and workspace attributes
     input_extension: extension of the file. Ex: ".json", ".fasta"
     """
     input_extension = predictor_data["input_extension"]
-    input_template = predictor_data["prot_lig_temp"]
+    general_template = predictor_data["prot_lig_temp"]
+    prot_template = predictor_data["prot_temp"]
+    lig_template = predictor_data["lig_temp"]
 
     input_file = os.path.join(workspace.inputs_predictor,system.name+input_extension)
-    input_str = input_template.format(system=system, workspace=workspace)
+
+    if mode == "all":
+        prot_text = prot_template.format(system=system,workspace=workspace)
+        lig_text = lig_template.format(system=system,workspace=workspace)
+    elif mode == "prot":
+        prot_text = prot_template.format(system=system,workspace=workspace)
+        lig_text = ""
+
+    input_str = general_template.format(protein=prot_text, ligand=lig_text)
     
     with open(input_file, "w") as file:
         file.write(input_str)

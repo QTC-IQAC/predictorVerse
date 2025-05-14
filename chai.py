@@ -5,15 +5,12 @@ Spring 2025
 import os
 from utils import System, Workspace, gen_fasta
 
-chai_prot_fasta = """>protein|{system.name}_prot
-{system.seq}
-"""
+chai_prot_fasta = """>protein|{system.name}_prot\n{system.seq}"""
 
-chai_lig_fasta = """>ligand|{system.name}_lig
-{system.smiles}
-"""
+chai_lig_fasta = """>ligand|{system.name}_lig\n{system.smiles}"""
 
-chai_fasta_template = chai_prot_fasta + chai_lig_fasta
+# chai_fasta_template = chai_prot_fasta + chai_lig_fasta
+chai_fasta_template = """{protein}\n{ligand}"""
 
 chai_runner_template = """ #!/bin/bash
 

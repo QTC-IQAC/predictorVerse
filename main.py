@@ -19,12 +19,13 @@ from info import predictors_library
 # Input arguments
 input_csv = sys.argv[1]
 workspace_name = "GalaxyTEST" # TODO This will be a defalt with argparse
-input_predictors = ["AF3",
-              "RFAA",
-              "Chai",
-              "Boltz",
-              "OF"
-]
+input_predictors = ["Chai"]
+# ["AF3",
+#               "RFAA",
+#               "Chai",
+#               "Boltz",
+#               "OF"
+# ]
 
 # Read inputs
 system_list = read_input_csv(input_csv)
@@ -47,7 +48,7 @@ for predictor in predictors_list:
 
     # Generate input (the default fasta file)
     for system in system_list:
-        gen_input(system, workspace, data)
+        gen_input(system, workspace, data,mode="prot")
 
     # # Generate runner
     # gen_runner(workspace)
