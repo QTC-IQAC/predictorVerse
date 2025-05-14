@@ -11,8 +11,7 @@ TODO: OF only produces 1 output. Make it so:
             <run omegafold>
 """
 of_prot_fasta = """>{system.name}_prot\n{system.seq}"""
-of_lig_fasta = ""
-of_fasta_template = """{protein}\n{ligand}"""
+of_fasta_template = """{input}"""
 
 def gen_of_input(system_list:list[System], workspace:Workspace)-> None:
     """
@@ -76,6 +75,7 @@ def main(system_list:System, workspace:Workspace):
 of_data = {"name": "OF",
             "prot_temp": of_fasta_template,
             "lig_temp": "",
+            "joiner":"\n",
             "prot_lig_temp": of_fasta_template,
             "input_extension": ".fasta",
             # "runner_temp":

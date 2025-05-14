@@ -7,7 +7,7 @@ import os
 
 boltz_prot_fasta = """>A|protein||{system.name}_prot\n{system.seq}"""
 boltz_lig_fasta = """>B|smiles||{system.name}_lig\n{system.smiles}"""
-boltz_fasta_template = """{protein}\n{ligand}"""
+boltz_fasta_template = """{input}"""
     
 def gen_boltz_input(system:System , workspace:Workspace)-> None:
     """
@@ -79,6 +79,7 @@ def main(system_list: list[System], workspace: Workspace):
 boltz_data = {"name": "Boltz",
             "prot_temp": boltz_prot_fasta,
             "lig_temp": boltz_lig_fasta,
+            "joiner":"\n",
             "prot_lig_temp": boltz_fasta_template,
             "input_extension": ".fasta",
             # "runner_temp":

@@ -7,18 +7,22 @@ from rdkit import Chem # main tools
 from rdkit.Chem import AllChem # additional tools, including 3D
 
 
+
+rfaa_prot_template = """protein_inputs:
+  A:
+    fasta_file: ./{workspace.inputs_predictor_unix}/fastas/{system.name}_prot.fasta"""
+
+rfaa_lig_template = """sm_inputs:
+  B:
+    input: ./{workspace.inputs_predictor_unix}/fastas/{system.name}_lig.sdf
+    input_type: 'sdf'"""
+
 rfaa_yaml_template ="""defaults:
 - base
 - _self_
 job_name: {system.name}
 output_path: ./{workspace.outputs_predictor_unix}
-protein_inputs:
-  A:
-    fasta_file: ./{workspace.inputs_predictor_unix}/fastas/{system.name}_prot.fasta
-sm_inputs:
-  B:
-    input: ./{workspace.inputs_predictor_unix}/fastas/{system.name}_lig.sdf
-    input_type: 'sdf'
+{input}
 """
 #.format(system.name, fastas_dir, output_dir)
 
@@ -155,8 +159,9 @@ def lig_smiles_to_sdf(system:System, workspace: Workspace):
 
     
 rfaa_data = {"name": "RFAA",
-            # "prot_temp": 
-            # "lig_temp": 
+            "prot_temp": rfaa_prot_template,
+            "lig_temp": rfaa_lig_template,
+            "joiner":"\n",
             "prot_lig_temp": rfaa_yaml_template,
             "input_extension": ".yaml",
             # "runner_temp":

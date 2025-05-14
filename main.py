@@ -19,7 +19,7 @@ from info import predictors_library
 # Input arguments
 input_csv = sys.argv[1]
 workspace_name = "GalaxyTEST" # TODO This will be a defalt with argparse
-input_predictors = ["AF3"]
+input_predictors = ["RFAA"]
 # ["AF3",
 #               "RFAA",
 #               "Chai",
