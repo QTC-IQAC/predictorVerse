@@ -1,5 +1,5 @@
 import os 
-from utils import System, Workspace
+from utils import System, Predictor
 
 
 general_temp ="""#!/bin/bash
@@ -41,8 +41,8 @@ fi
 
 # Basic inputs
 basic_input_temp = """
-inputs_dir=$cwd/{workspace.inputs_predictor_unix}
-outputs_dir=$cwd/{workspace.outputs_predictor_unix}
+inputs_dir=$cwd/{predictor.inputs_unix}
+outputs_dir=$cwd/{predictor.outputs_unix}
 """
 
 
@@ -79,7 +79,7 @@ header_csuc="""#SBATCH --job-name=AF3
 #SBATCH --array=1-10%2
 """
 
-def gen_jobarray(system_list:list[System], workspace:Workspace, max_cap_jobs=None | int) -> None:
+def gen_jobarray(system_list:list[System], predictor:Predictor, max_cap_jobs=None | int) -> None:
     """
     
     max_cap_jobs : max number of jobs that can run at the same time.
@@ -91,10 +91,10 @@ def gen_jobarray(system_list:list[System], workspace:Workspace, max_cap_jobs=Non
     af3_jobarr_header = af3_jobarray_template.format(num_jobs, num_cap_jobs)
 
     # Runner file relative path
-    runner_file_rel_path = os.path.join(".",workspace.runners,"AF3_runner.sh")
+    runner_file_rel_path = os.path.join(".",predictor.runners,"AF3_runner.sh")
 
     # Open jobarr file
-    jobarr_file = os.path.join(workspace.runners,"AF3_jobarray.sh")
+    jobarr_file = os.path.join(predictor.runners,"AF3_jobarray.sh")
     with open(jobarr_file, "w") as jobarr:
         # Write header with correct parameters
         jobarr.write(af3_jobarr_header)
@@ -134,7 +134,7 @@ looper = True # True if looper indicat, false if not (in certain cases and in jo
 jobarray = False
 
 
-def gen_runner(system_list:list[System],workspace: Workspace, predictor_data:dict):
+def gen_runner(system_list:list[System], predictor: Predictor):
     # Getting header. TODO: when we have params for this, we will have a function here
     if header:
         header_txt = header_clusteriqac # check which header to use
@@ -142,7 +142,7 @@ def gen_runner(system_list:list[System],workspace: Workspace, predictor_data:dic
         header_txt = ""
     
     # Processing inputs
-    basic_input = basic_input_temp.format(workspace=workspace)
+    basic_input = basic_input_temp.format(predictor=predictor)
     
     if extra_inputs:
         inputs_txt = "\n".join([basic_input_temp, extra_inputs_txt])
@@ -150,25 +150,25 @@ def gen_runner(system_list:list[System],workspace: Workspace, predictor_data:dic
         inputs_txt = basic_input
     
     # Processing extra cmds
-    if predictor_data["extra_cmds"] is not None or predictor_data["extra_cmds"] != "":
-        extra_cmds_txt = predictor_data["extra_cmds"]
+    if predictor.extra_cmds is not None or predictor.extra_cmds != "":
+        extra_cmds_txt = predictor.extra_cmds
     else:
         extra_cmds_txt = ""
 
     # Processing main commands 
     if looper:
-        new_cmds = fix_commands_for_loop(predictor_data["main_cmds"])
-        main_cmds_txt = looper_temp.format(file_extension=predictor_data["input_extension"],
+        new_cmds = fix_commands_for_loop(predictor.main_cmds)
+        main_cmds_txt = looper_temp.format(file_extension=predictor.input_extension,
                                            execution_command=new_cmds)
     else:
-        main_cmds_txt = predictor_data["main_cmds"] 
+        main_cmds_txt = predictor.main_cmds
     
     # Assemble everything
     runner_txt = general_temp.format(header=header_txt,
                                     inputs_section=inputs_txt,
                                     extras=extra_cmds_txt,
                                     execution_section=main_cmds_txt)
-    runner_file = os.path.join(workspace.runners,f"{workspace.predictor}_runner.sh")
+    runner_file = os.path.join(predictor.runners,f"{predictor.name}_runner.sh")
 
     
     with open(runner_file,"w") as rr:
@@ -176,5 +176,5 @@ def gen_runner(system_list:list[System],workspace: Workspace, predictor_data:dic
     
     # Generate jobarray if needed
     if jobarray:
-        # gen_jobarray(system_list,workspace)
+        # gen_jobarray(system_list,predictor)
         pass

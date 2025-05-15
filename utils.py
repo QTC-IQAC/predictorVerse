@@ -7,47 +7,186 @@ import os
 # from info import predictors_library
 
 
-
 class System:
     def __init__(self, name, seq, smiles ):
         self.name = name #system name
         self.seq = seq #protein sequence
         self.smiles = smiles #smiles sequence
 
-class Workspace:
-    def __init__(self, name, pred=""):
+
+class BooleanProperty:
+    def __init__(self, default=False):
+        self.value = default
+
+    def __get__(self, instance, owner):
+        return self.value
+
+    def __set__(self, instance, value):
+        if isinstance(value, bool):
+            self.value = value
+        else:
+            raise ValueError(f"{self.name} must be a boolean value.")
+
+    def __set_name__(self, owner, name):
         self.name = name
-        self.inputs = self.name+"_inputs"
-        self.outputs = self.name+"_outputs"
-        self.runners = os.path.join(self.name+"_inputs","runners")
 
-        os.makedirs(self.inputs,exist_ok=True)
-        os.makedirs(self.runners,exist_ok=True)
-        os.makedirs(self.outputs,exist_ok=True)
+
+class RunnerParams:
+    header = BooleanProperty()
+    extra_cmds = BooleanProperty()
+    extra_inputs = BooleanProperty()
+    looper = BooleanProperty(True)
+    jobarray = BooleanProperty()
+
+    def __init__(self, header=False, 
+                 extra_cmds=False, 
+                 extra_inputs=False, 
+                 looper=True, 
+                 jobarray=False):
+                 
+        self.header = header
+        self.extra_cmds = extra_cmds
+        self.extra_inputs = extra_inputs
+        self.looper = looper
+        self.jobarray = jobarray
+
+
+
+class Predictor:
+    def __init__(self, name,
+                 prot_temp,
+                 lig_temp,
+                 prot_lig_temp,
+                 input_extension,
+                 main_cmds,
+                 joiner="\n",
+                 other_funcs=None,
+                 extra_cmds=None,
+                 runner_params=RunnerParams()):
         
-        self.predictor = pred
+        self.name = name
+        self.inputs = os.path.join(self.name, "inputs")
+        self.outputs = os.path.join(self.name, "outputs")
+        self.runners = os.path.join(self.name, "runners")
+        self.inputs_unix = self.name+"/"+"inputs"
+        self.outputs_unix = self.name+"/"+"outputs"
 
-        # @property
-        # def predictor(self):
-        #     return self._predictor
+        self.prot_temp = prot_temp
+        self.lig_temp = lig_temp
+        self.prot_lig_temp = prot_lig_temp
+        self.input_extension = input_extension
+        self.main_cmds = main_cmds
+        self.joiner = joiner
+        self.other_funcs = other_funcs
+        self.extra_cmds = extra_cmds
+        self.runner_params = runner_params
 
     @property
-    def inputs_predictor(self):
-        return os.path.join(self.inputs,self.predictor)
-    
+    def prot_temp(self):
+        return self._prot_temp
+
+    @prot_temp.setter
+    def prot_temp(self, value):
+        if isinstance(value, str):
+            self._prot_temp = value
+        else:
+            raise ValueError("prot_temp must be a string.")
+
     @property
-    def inputs_predictor_unix(self):
-        return self.inputs+"/"+self.predictor
-    
+    def lig_temp(self):
+        return self._lig_temp
+
+    @lig_temp.setter
+    def lig_temp(self, value):
+        if isinstance(value, str):
+            self._lig_temp = value
+        else:
+            raise ValueError("lig_temp must be a string.")
+
     @property
-    def outputs_predictor(self):
-        return os.path.join(self.outputs,self.predictor)
-    
+    def prot_lig_temp(self):
+        return self._prot_lig_temp
+
+    @prot_lig_temp.setter
+    def prot_lig_temp(self, value):
+        if isinstance(value, str):
+            self._prot_lig_temp = value
+        else:
+            raise ValueError("prot_lig_temp must be a string.")
+
     @property
-    def outputs_predictor_unix(self):
-        return self.outputs+"/"+self.predictor
+    def input_extension(self):
+        return self._input_extension
+
+    @input_extension.setter
+    def input_extension(self, value):
+        if isinstance(value, str) or value is None:
+            self._input_extension = value
+        else:
+            raise ValueError("input_extension must be a string or None.")
+
+    @property
+    def main_cmds(self):
+        return self._main_cmds
+
+    @main_cmds.setter
+    def main_cmds(self, value):
+        if isinstance(value, str):
+            self._main_cmds = value
+        else:
+            raise ValueError("main_cmds must be a string.")
+
+    @property
+    def joiner(self):
+        return self._joiner
+
+    @joiner.setter
+    def joiner(self, value):
+        if isinstance(value, str):
+            self._joiner = value
+        else:
+            raise ValueError("joiner must be a string.")
+
+    @property
+    def other_funcs(self):
+        return self._other_funcs
+
+    @other_funcs.setter
+    def other_funcs(self, value):
+        if isinstance(value, list) or value is None:
+            self._other_funcs = value
+        else:
+            raise ValueError("other_funcs must be a list of functions or None.")
+
+    @property
+    def extra_cmds(self):
+        return self._extra_cmds
+
+    @extra_cmds.setter
+    def extra_cmds(self, value):
+        if isinstance(value, str) or value is None:
+            self._extra_cmds = value
+        else:
+            raise ValueError("extra_cmds must be a string or None.")
+
+    @property
+    def runner_params(self):
+        return self._runner_params
+
+    @runner_params.setter
+    def runner_params(self, value):
+        if isinstance(value, RunnerParams):
+            self._runner_params = value
+        else:
+            raise ValueError("runner_params must be an instance of RunnerParams.")
+
+    def create_folders(self):
+        os.makedirs(self.inputs, exist_ok=True)
+        os.makedirs(self.runners, exist_ok=True)
+        os.makedirs(self.outputs, exist_ok=True)
         
 
+##### Functions #####
 
 def read_input_csv(csv_file: str, sep=",") -> list:
     """
@@ -96,40 +235,42 @@ def gen_fasta(system:System ,out_path:str, mode=None|str)-> None:
 
 
 
-def gen_input(system:System, workspace: Workspace, predictor_data: dict, mode="all") -> None:
+def gen_input(system:System, predictor: Predictor, mode="all") -> None:
     """
-    input_template: text of the input. formated with system and workspace attributes
+    input_template: text of the input. formated with system and predictor attributes
     input_extension: extension of the file. Ex: ".json", ".fasta"
     """
-    input_extension = predictor_data["input_extension"]
-    general_template = predictor_data["prot_lig_temp"]
-    prot_template = predictor_data["prot_temp"]
-    lig_template = predictor_data["lig_temp"]
-    joiner = predictor_data["joiner"]
+    input_extension = predictor.input_extension
+    general_template = predictor.prot_lig_temp
+    prot_template = predictor.prot_temp
+    lig_template = predictor.lig_temp
+    joiner = predictor.joiner
 
-    input_file = os.path.join(workspace.inputs_predictor,system.name+input_extension)
+    input_file = os.path.join(predictor.inputs,system.name+input_extension)
 
     if mode == "all":
-        prot_text = prot_template.format(system=system,workspace=workspace)
-        lig_text = lig_template.format(system=system,workspace=workspace)
+        prot_text = prot_template.format(system=system,predictor=predictor)
+        lig_text = lig_template.format(system=system,predictor=predictor)
         inputs_to_join = [prot_text,lig_text]
+    
     elif mode == "prot":
-        prot_text = prot_template.format(system=system,workspace=workspace)
+        prot_text = prot_template.format(system=system,predictor=predictor)
         inputs_to_join = [prot_text]
     
     input_text = joiner.join(inputs_to_join)
-    final_input = general_template.format(input=input_text, system=system, workspace=workspace)
+    final_input = general_template.format(input=input_text, system=system, predictor=predictor)
     
     with open(input_file, "w") as file:
         file.write(final_input)
 
     # If there are other functions (in predictor_data["other_funcs"]), execute them
     try:
-        if predictor_data["other_funcs"] is not None:
-            for func in predictor_data["other_funcs"]:
-                func(system, workspace)
+        if predictor.other_funcs is not None:
+            print(predictor.other_funcs)
+            for func in predictor.other_funcs:
+                func(system, predictor)
     except:
-        print(f"WARNING: No other funcs were found for {predictor_data["name"]} or is not iterable. Skipping")
+        print(f"WARNING: No other funcs were found for {predictor.name} or is not iterable. Skipping")
 
 
 

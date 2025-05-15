@@ -10,7 +10,7 @@ You will execute this via command line and give
 """
 
 
-from utils import System, Workspace
+from utils import System, Predictor
 from utils import read_input_csv, check_predictor_exists, gen_input
 import sys
 import os
@@ -19,8 +19,7 @@ from jobscripts import gen_runner
 
 # Input arguments
 input_csv = sys.argv[1]
-workspace_name = "GalaxyTEST" # TODO This will be a defalt with argparse
-input_predictors = ["Chai"]
+input_predictors_name = ["Chai"]
 # ["AF3",
 #               "RFAA",
 #               "Chai",
@@ -30,26 +29,23 @@ input_predictors = ["Chai"]
 
 # Read inputs
 system_list = read_input_csv(input_csv)
-workspace = Workspace(workspace_name)
-predictors_list = check_predictor_exists(input_predictors, predictors_library)
+
+predictors_name_list = check_predictor_exists(input_predictors_name, predictors_library)
 
 # Start doing things (TODO: put this in funcs)
-for predictor in predictors_list:
-    print(f"------{predictor}------")
+for predictor_name in predictors_name_list:
+    print(f"------{predictor_name}------")
     
     # Get predictor data
-    data = predictors_library[predictor]
+    predictor = predictors_library[predictor_name]
 
-    # Change current predictor in in Workspace
-    workspace.predictor = predictor
 
     # Create directories
-    os.makedirs(workspace.inputs_predictor,exist_ok=True)
-    os.makedirs(workspace.outputs_predictor,exist_ok=True)
+    predictor.create_folders()
 
     # Generate input (the default fasta file)
     for system in system_list:
-        gen_input(system, workspace, data,mode="prot")
+        gen_input(system, predictor, mode="prot")
 
     # # Generate runner
-    gen_runner(system_list,workspace,data)
+    gen_runner(system_list,predictor)
