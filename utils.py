@@ -292,7 +292,6 @@ def gen_input(system:System, predictor: Predictor, mode="all") -> None:
     # If there are other functions (in predictor_data["other_funcs"]), execute them
     try:
         if predictor.other_funcs is not None:
-            print(predictor.other_funcs)
             for func in predictor.other_funcs:
                 func(system, predictor)
     except:

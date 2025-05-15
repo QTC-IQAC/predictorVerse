@@ -19,13 +19,12 @@ from jobscripts import gen_runner
 
 # Input arguments
 input_csv = sys.argv[1]
-input_predictors_name = ["Chai"]
-# ["AF3",
-#               "RFAA",
-#               "Chai",
-#               "Boltz",
-#               "OF"
-# ]
+input_predictors_name = ["AF3",
+              "RFAA",
+              "Chai",
+              "Boltz",
+              "OF"
+]
 
 # Read inputs
 system_list = read_input_csv(input_csv)

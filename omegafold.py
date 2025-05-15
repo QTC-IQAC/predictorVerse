@@ -24,7 +24,7 @@ runner_params = RunnerParams(header="clusteriqac",
 
 
 of_data = Predictor(name= "OF",
-            prot_temp= of_fasta_template,
+            prot_temp= of_prot_fasta,
             lig_temp= "",
             joiner="\n",
             prot_lig_temp= of_fasta_template,
@@ -93,12 +93,3 @@ of_data = Predictor(name= "OF",
 
 #     # Generate runner
 #     gen_of_runner(predictor)
-
-of_data = {"name": "OF",
-            "prot_temp": of_fasta_template,
-            "lig_temp": "",
-            "joiner":"\n",
-            "prot_lig_temp": of_fasta_template,
-            "input_extension": ".fasta",
-            # "runner_temp":
-}

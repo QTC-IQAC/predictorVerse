@@ -144,11 +144,11 @@ def gen_prot_fasta(system: System, predictor: Predictor):
     Generate fasta file for the protein
     """
     # Create fastas folder
-    fastas_dir = os.path.join(predictor.inputs_predictor,"fastas")
+    fastas_dir = os.path.join(predictor.inputs,"fastas")
     os.makedirs(fastas_dir,exist_ok=True)
 
     # Generate protein fasta file
-    fasta_file = os.path.join(predictor.inputs_predictor,"fastas",f"{system.name}_prot.fasta")
+    fasta_file = os.path.join(predictor.inputs,"fastas",f"{system.name}_prot.fasta")
     
     with open(fasta_file,"w") as fastaff:
         fastaff.write(f">protein|{system.name}_prot\n{system.seq}\n")
@@ -158,7 +158,7 @@ def lig_smiles_to_sdf(system:System, predictor: Predictor):
     """
     From ligand smiles generate a sdf file 
     """
-    sdf_file = os.path.join(predictor.inputs_predictor,"fastas",f"{system.name}_lig.sdf")
+    sdf_file = os.path.join(predictor.inputs,"fastas",f"{system.name}_lig.sdf")
     
     mol = Chem.MolFromSmiles(system.smiles) # initialize molecule
 
