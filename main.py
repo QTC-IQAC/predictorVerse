@@ -15,11 +15,12 @@ from utils import read_input_csv, check_predictor_exists, gen_input
 import sys
 import os
 from info import predictors_library
+from jobscripts import gen_runner
 
 # Input arguments
 input_csv = sys.argv[1]
 workspace_name = "GalaxyTEST" # TODO This will be a defalt with argparse
-input_predictors = ["RFAA"]
+input_predictors = ["Chai"]
 # ["AF3",
 #               "RFAA",
 #               "Chai",
@@ -51,4 +52,4 @@ for predictor in predictors_list:
         gen_input(system, workspace, data,mode="prot")
 
     # # Generate runner
-    # gen_runner(workspace)
+    gen_runner(system_list,workspace,data)
