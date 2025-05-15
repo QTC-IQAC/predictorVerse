@@ -53,9 +53,9 @@ for file in $inputs_dir/*{file_extension}; do
 done
 """
 
-header_clusteriqac="""#SBATCH -J boltz
-#SBATCH -e %J.err
-#SBATCH -o %J.out
+header_clusteriqac="""#SBATCH --job-name={predictor.name}
+#SBATCH -e %j.err
+#SBATCH -o %j.out
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
@@ -64,9 +64,9 @@ header_clusteriqac="""#SBATCH -J boltz
 #SBATCH --gres=gpu:1
 """
 
-header_csuc="""#SBATCH --job-name=AF3
-#SBATCH -e AF3.err
-#SBATCH -o AF3.log
+header_csuc="""#SBATCH --job-name={predictor.name}
+#SBATCH -e %j.err
+#SBATCH -o %j.log
 #SBATCH -t 00-01:00
 #SBATCH -p gpu
 #SBATCH --reservation=cuda_12.6
@@ -74,10 +74,27 @@ header_csuc="""#SBATCH --job-name=AF3
 #SBATCH -n 32
 """
 
+headers_dict = {"clusteriqac": header_clusteriqac,
+                "csuc": header_csuc,
+                "default": header_clusteriqac}
+
 # Line for jobarrays
+jobarr_temp = """
+#SBATCH --array=1-{0}%{1}
 """
-#SBATCH --array=1-10%2
-"""
+
+def get_header(header_key: bool | str) -> str:
+    if isinstance(header_key, str):
+        try:
+            return headers_dict[header_key]
+        except:
+            print(f"{header_key} header is not found. Returning default one")
+            return headers_dict["default"]
+    elif isinstance(header_key, bool) and header_key is True:
+        print("No header selected. Returning default one")
+        return headers_dict["default"]
+
+
 
 def gen_jobarray(system_list:list[System], predictor:Predictor, max_cap_jobs=None | int) -> None:
     """
@@ -88,25 +105,27 @@ def gen_jobarray(system_list:list[System], predictor:Predictor, max_cap_jobs=Non
     # Set variables
     num_jobs = len(system_list)
     num_cap_jobs = num_jobs if max_cap_jobs is None else max_cap_jobs
-    af3_jobarr_header = af3_jobarray_template.format(num_jobs, num_cap_jobs)
+    header_txt = get_header(predictor.runner_params.header)
+    jobarr_header = header_txt.format(predictor=predictor) + jobarr_temp.format(num_jobs, num_cap_jobs)
 
     # Runner file relative path
-    runner_file_rel_path = os.path.join(".",predictor.runners,"AF3_runner.sh")
+    runner_file_rel_path = os.path.join(".",predictor.runners,f"{predictor.name}_runner.sh")
 
     # Open jobarr file
-    jobarr_file = os.path.join(predictor.runners,"AF3_jobarray.sh")
+    jobarr_file = os.path.join(predictor.runners,f"{predictor.name}_jobarray.sh")
     with open(jobarr_file, "w") as jobarr:
         # Write header with correct parameters
-        jobarr.write(af3_jobarr_header)
+        jobarr.write(jobarr_header)
 
         # Write case start
         jobarr.write("case $SLURM_ARRAY_TASK_ID in\n")
 
         # Start looping through systems
         for ii, system in enumerate(system_list):
-            jobarr.write(f"{ii+1}) {runner_file_rel_path} {system.name}.json ;;\n")
+            jobarr.write(f"{ii+1}) {runner_file_rel_path} {system.name}{predictor.input_extension} ;;\n")
         
         jobarr.write("esac")
+
 
 def fix_commands_for_loop(txt:str) -> str:
     """
@@ -127,24 +146,19 @@ looper = False | True # True if looper indicat, false if not (in certain cases a
 jobarray = False | True # True only if jobarray
 """
 
-header = False # depends on local or cluster. Cluster should have an option to choose cluster header
-extra_cmds = False
-extra_inputs = False # Only True for job arrays
-looper = True # True if looper indicat, false if not (in certain cases and in jobarrays)
-jobarray = False
-
 
 def gen_runner(system_list:list[System], predictor: Predictor):
     # Getting header. TODO: when we have params for this, we will have a function here
-    if header:
-        header_txt = header_clusteriqac # check which header to use
-    else:
+    if not predictor.runner_params.header:
         header_txt = ""
+    else:
+        header_txt = get_header(predictor.runner_params.header).format(predictor=predictor) # check which header to use
+
     
     # Processing inputs
     basic_input = basic_input_temp.format(predictor=predictor)
     
-    if extra_inputs:
+    if predictor.runner_params.extra_inputs:
         inputs_txt = "\n".join([basic_input_temp, extra_inputs_txt])
     else:
         inputs_txt = basic_input
@@ -156,7 +170,7 @@ def gen_runner(system_list:list[System], predictor: Predictor):
         extra_cmds_txt = ""
 
     # Processing main commands 
-    if looper:
+    if predictor.runner_params.looper:
         new_cmds = fix_commands_for_loop(predictor.main_cmds)
         main_cmds_txt = looper_temp.format(file_extension=predictor.input_extension,
                                            execution_command=new_cmds)
@@ -175,6 +189,5 @@ def gen_runner(system_list:list[System], predictor: Predictor):
         rr.write(runner_txt)
     
     # Generate jobarray if needed
-    if jobarray:
-        # gen_jobarray(system_list,predictor)
-        pass
+    if predictor.runner_params.jobarray:
+        gen_jobarray(system_list,predictor, max_cap_jobs=2)

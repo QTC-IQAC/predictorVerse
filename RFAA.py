@@ -170,7 +170,7 @@ def lig_smiles_to_sdf(system:System, predictor: Predictor):
     writer = Chem.SDWriter(sdf_file) # Write in .sdf file
     writer.write(mol)
 
-runner_params = RunnerParams(header=True,
+runner_params = RunnerParams(header="clusteriqac",
                              extra_cmds=True,
                              extra_inputs=False,
                              looper=True,

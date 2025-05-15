@@ -47,7 +47,7 @@ exec_command = """singularity exec  \\
               --output_dir=/root/$outputs_dir
 """
 
-runner_params = RunnerParams(header=True,
+runner_params = RunnerParams(header="csuc",
                              extra_cmds=True,
                              extra_inputs=True,
                              looper=False,

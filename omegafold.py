@@ -16,7 +16,7 @@ of_fasta_template = """{input}"""
 exec_command = "omegafold $file $output_dir"
 
 
-runner_params = RunnerParams(header=True,
+runner_params = RunnerParams(header="clusteriqac",
                              extra_cmds=False,
                              extra_inputs=False,
                              looper=True,

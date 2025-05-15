@@ -22,7 +22,7 @@ runner_params = RunnerParams(header=False,
                              looper=True,
                              jobarray=False)
 
-chai_data = Predictor(name = "Chai-1",
+chai_data = Predictor(name = "Chai",
             prot_temp= chai_prot_fasta,
             lig_temp= chai_lig_fasta,
             joiner="\n",

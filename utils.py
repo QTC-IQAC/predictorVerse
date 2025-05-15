@@ -13,42 +13,68 @@ class System:
         self.seq = seq #protein sequence
         self.smiles = smiles #smiles sequence
 
-
-class BooleanProperty:
-    def __init__(self, default=False):
-        self.value = default
-
-    def __get__(self, instance, owner):
-        return self.value
-
-    def __set__(self, instance, value):
-        if isinstance(value, bool):
-            self.value = value
-        else:
-            raise ValueError(f"{self.name} must be a boolean value.")
-
-    def __set_name__(self, owner, name):
-        self.name = name
-
-
 class RunnerParams:
-    header = BooleanProperty()
-    extra_cmds = BooleanProperty()
-    extra_inputs = BooleanProperty()
-    looper = BooleanProperty(True)
-    jobarray = BooleanProperty()
-
-    def __init__(self, header=False, 
-                 extra_cmds=False, 
-                 extra_inputs=False, 
-                 looper=True, 
+    def __init__(self,
+                 header=False,
+                 extra_cmds=False,
+                 extra_inputs=False,
+                 looper=True,
                  jobarray=False):
-                 
-        self.header = header
-        self.extra_cmds = extra_cmds
-        self.extra_inputs = extra_inputs
-        self.looper = looper
-        self.jobarray = jobarray
+        self._header = header
+        self._extra_cmds = extra_cmds
+        self._extra_inputs = extra_inputs
+        self._looper = looper
+        self._jobarray = jobarray
+
+    @property
+    def header(self):
+        return self._header
+    @header.setter
+    def header(self, value):
+        if isinstance(value, (bool,str)):
+            self._header = value
+        else:
+            raise ValueError("header must be a boolean or a string value.")
+   
+    @property
+    def extra_cmds(self):
+        return self._extra_cmds
+    @extra_cmds.setter
+    def extra_cmds(self, value):
+        if isinstance(value, bool):
+            self._extra_cmds = value
+        else:
+            raise ValueError("extra_cmds must be a boolean value.")
+    
+    @property
+    def extra_inputs(self):
+        return self._extra_inputs
+    @extra_inputs.setter
+    def extra_inputs(self, value):
+        if isinstance(value, bool):
+            self._extra_inputs = value
+        else:
+            raise ValueError("extra_inputs must be a boolean value.")
+    
+    @property
+    def looper(self):
+        return self._looper
+    @looper.setter
+    def looper(self, value):
+        if isinstance(value, bool):
+            self._looper = value
+        else:
+            raise ValueError("looper must be a boolean value.")
+    
+    @property
+    def jobarray(self):
+        return self._jobarray
+    @jobarray.setter
+    def jobarray(self, value):
+        if isinstance(value, bool):
+            self._jobarray = value
+        else:
+            raise ValueError("jobarray must be a boolean value.")
 
 
 
