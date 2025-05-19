@@ -79,9 +79,10 @@ headers_dict = {"clusteriqac": header_clusteriqac,
                 "default": header_clusteriqac}
 
 # Line for jobarrays
-jobarr_temp = """
-#SBATCH --array=1-{0}%{1}
+jobarr_temp = """#SBATCH --array=1-{0}%{1}
+
 """
+
 
 def get_header(header_key: bool | str) -> str:
     if isinstance(header_key, str):
@@ -106,7 +107,7 @@ def gen_jobarray(system_list:list[System], predictor:Predictor, max_cap_jobs=Non
     num_jobs = len(system_list)
     num_cap_jobs = num_jobs if max_cap_jobs is None else max_cap_jobs
     header_txt = get_header(predictor.runner_params.header)
-    jobarr_header = header_txt.format(predictor=predictor) + jobarr_temp.format(num_jobs, num_cap_jobs)
+    jobarr_header = "#!/bin/bash\n" + header_txt.format(predictor=predictor) + jobarr_temp.format(num_jobs, num_cap_jobs)
 
     # Runner file relative path
     runner_file_rel_path = os.path.join(".",predictor.runners,f"{predictor.name}_runner.sh")
@@ -159,7 +160,7 @@ def gen_runner(system_list:list[System], predictor: Predictor):
     basic_input = basic_input_temp.format(predictor=predictor)
     
     if predictor.runner_params.extra_inputs:
-        inputs_txt = "\n".join([basic_input_temp, extra_inputs_txt])
+        inputs_txt = "\n".join([basic_input, extra_inputs_txt])
     else:
         inputs_txt = basic_input
     

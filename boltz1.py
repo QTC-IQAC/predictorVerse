@@ -11,7 +11,7 @@ boltz_fasta_template = """{input}"""
 
 exec_command = "boltz predict $file --use_msa_server --diffusion_samples 10 --out_dir $outputs_dir"
 
-runner_params = RunnerParams(header=False,
+runner_params = RunnerParams(header="clusteriqac",
                              extra_cmds=False,
                              extra_inputs=False,
                              looper=True,

@@ -37,9 +37,9 @@ extra_cmds = "module load alphafold/3"
 
 exec_command = """singularity exec  \\
       \\
-     --bind $RD/$inputs_dir:/root/$inputs_dir \\
-     --bind $RD/$outputs_dir:/root/$outputs_dir \\
-     --bind $RD/models:/root/models \\
+     --bind $inputs_dir:/root/$inputs_dir \\
+     --bind $outputs_dir:/root/$outputs_dir \\
+     --bind $cwd/models:/root/models \\
      --bind /data/ddbb/alphafold3:/root/public_databases \\
            /prod/container/alphafold3/alphafold3.sif \\
      python run_alphafold.py --model_dir=/root/models --db_dir=/root/public_databases \\
@@ -62,6 +62,7 @@ af3_data = Predictor(name= "AF3",
             input_extension= ".json",
             extra_cmds=extra_cmds,
             main_cmds=exec_command,
+            runner_params=runner_params
 )
 
 
