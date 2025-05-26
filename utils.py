@@ -261,7 +261,7 @@ def gen_fasta(system:System ,out_path:str, mode=None|str)-> None:
 
 
 
-def gen_input(system:System, predictor: Predictor, mode="all") -> None:
+def gen_input(system:System, predictor: Predictor, only_prot=False) -> None:
     """
     input_template: text of the input. formated with system and predictor attributes
     input_extension: extension of the file. Ex: ".json", ".fasta"
@@ -274,12 +274,12 @@ def gen_input(system:System, predictor: Predictor, mode="all") -> None:
 
     input_file = os.path.join(predictor.inputs,system.name+input_extension)
 
-    if mode == "all":
+    if not only_prot:
         prot_text = prot_template.format(system=system,predictor=predictor)
         lig_text = lig_template.format(system=system,predictor=predictor)
         inputs_to_join = [prot_text,lig_text]
     
-    elif mode == "prot":
+    elif only_prot:
         prot_text = prot_template.format(system=system,predictor=predictor)
         inputs_to_join = [prot_text]
     
