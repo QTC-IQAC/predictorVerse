@@ -1,0 +1,69 @@
+import os
+from utils import System, Predictor, RunnerParams
+
+
+# Double braces to not confuse with {0}
+
+af3_prot_json = """      {{
+        "protein": {{
+          "id": "A",
+          "sequence": "{system.seq}"
+        }}
+      }}"""
+
+
+
+af3_lig_json = """      {{
+        "ligand": {{
+          "id": "B",
+          "smiles": "{system.smiles}"
+        }}
+      }}"""
+
+
+af3_json_template = """{{
+    "name": "{system.name}",
+    "modelSeeds": [10, 42],
+    "sequences": [
+      {input}
+    ],
+    "dialect": "alphafold3",
+    "version": 2
+
+}}
+"""
+
+extra_cmds = "module load alphafold/3"
+
+exec_command = """singularity exec  \\
+      \\
+     --bind $inputs_dir:/root/$inputs_dir \\
+     --bind $outputs_dir:/root/$outputs_dir \\
+     --bind $cwd/models:/root/models \\
+     --bind /data/ddbb/alphafold3:/root/public_databases \\
+           /prod/container/alphafold3/alphafold3.sif \\
+     python run_alphafold.py --model_dir=/root/models --db_dir=/root/public_databases \\
+              --json_path=/root/$input \\
+              --output_dir=/root/$outputs_dir
+"""
+
+runner_params = RunnerParams(header="csuc",
+                             extra_cmds=True,
+                             extra_inputs=True,
+                             looper=False,
+                             jobarray=True)
+
+
+af3_data = Predictor(name= "AF3",
+            prot_temp= af3_prot_json,
+            lig_temp= af3_lig_json,
+            joiner=",\n",
+            prot_lig_temp= af3_json_template,
+            input_extension= ".json",
+            extra_cmds=extra_cmds,
+            main_cmds=exec_command,
+            runner_params=runner_params
+)
+
+
+

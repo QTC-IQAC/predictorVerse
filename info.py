@@ -1,9 +1,9 @@
-from af3 import af3_data
-from chai import chai_data
-from boltz1 import boltz_data
-from omegafold import of_data
-from RFAA import rfaa_data
-from boltz1x import boltz1x_data
+from predictor_templates.af3 import af3_data
+from predictor_templates.chai import chai_data
+from predictor_templates.boltz1 import boltz_data
+from predictor_templates.omegafold import of_data
+from predictor_templates.RFAA import rfaa_data
+from predictor_templates.boltz1x import boltz1x_data
 
 # TODO: Make a help command that indicates all correspondences between full name and short name
 
