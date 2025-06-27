@@ -10,7 +10,7 @@ TODO: OF only produces 1 output. Make it so:
         for ii in {1..10}
             <run omegafold>
 """
-of_prot_fasta = """>{system.name}_prot\n{system.seq}"""
+of_prot_fasta = """>{system.name}_prot\n{seq}"""
 of_fasta_template = """{input}"""
 
 exec_command = "omegafold $file $output_dir"

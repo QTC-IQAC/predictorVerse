@@ -7,7 +7,7 @@ from utils import System, Predictor, RunnerParams
 af3_prot_json = """      {{
         "protein": {{
           "id": "A",
-          "sequence": "{system.seq}"
+          "sequence": "{seq}"
         }}
       }}"""
 
@@ -16,14 +16,14 @@ af3_prot_json = """      {{
 af3_lig_json = """      {{
         "ligand": {{
           "id": "B",
-          "smiles": "{system.smiles}"
+          "smiles": "{seq}"
         }}
       }}"""
 
 
 af3_json_template = """{{
     "name": "{system.name}",
-    "modelSeeds": [13,14,15,16,17,18,19,20 ],
+    "modelSeeds": [42,14],
     "sequences": [
       {input}
     ],
