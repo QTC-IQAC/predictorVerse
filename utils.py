@@ -270,6 +270,14 @@ def gen_fasta(system:System ,out_path:str, mode=None|str)-> None:
 
     fff.close()
 
+def alphabet_generator():
+    """
+    An alphabet generator to put correct chain letters in AF3, RFAA and the like
+    """
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for letter in alphabet:
+        yield letter
+
 
 def combinations(field:str, system:System, predictor:Predictor): #predictor tmb aniria aqui
     """ 
