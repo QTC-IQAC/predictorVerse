@@ -69,7 +69,6 @@ header_csuc="""#SBATCH --job-name={predictor.name}
 #SBATCH -o %j.log
 #SBATCH -t 00-01:00
 #SBATCH -p gpu
-#SBATCH --reservation=cuda_12.6
 #SBATCH --gres=gpu:1
 #SBATCH -n 32
 """

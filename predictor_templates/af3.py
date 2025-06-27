@@ -23,7 +23,7 @@ af3_lig_json = """      {{
 
 af3_json_template = """{{
     "name": "{system.name}",
-    "modelSeeds": [10, 42],
+    "modelSeeds": [13,14,15,16,17,18,19,20 ],
     "sequences": [
       {input}
     ],

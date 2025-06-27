@@ -308,7 +308,7 @@ def check_predictor_exists(predictor_id_list: list[str], predictors_library: dic
             aa = predictors_library[predictor]
         except:
             print(f"WARNING: {predictor} id has no data associated. Removing it from predictors list.")
-            pred_to_remove.appen(predictor)
+            pred_to_remove.append(predictor)
     
     checked_predictors = [x for x in predictor_id_list if x not in pred_to_remove]
 
