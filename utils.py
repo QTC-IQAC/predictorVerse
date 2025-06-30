@@ -1,5 +1,6 @@
 """
-Berta Bori Bru
+Berta Bori Bru - IQAC-CSIC
+Spring 2025
 
 Utility functions
 """

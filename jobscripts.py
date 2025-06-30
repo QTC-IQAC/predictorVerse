@@ -1,98 +1,29 @@
+"""
+Berta Bori Bru - IQAC-CSIC
+Spring 2025
+
+
+Functions to generate runner files for the predictors
+"""
+
+
+
 import os 
 from utils import System, Predictor
+import predictor_templates.jobscripts_templates as jt
 
-
-general_temp ="""#!/bin/bash
-{header}
-
-cwd=$(pwd)
-
-{inputs_section}
-
-{extras}
-
-#### Main program ####
-
-start_date=$(date)
-
-{execution_section}
-
-final_date=$(date)
-
-cd $cwd
-
-echo "START DATE: $start_date"
-echo "FINAL DATE: $final_date"
-
-"""
-
-# flag for runner in jobarray
-extra_inputs_txt = """
-input_name=$1
-input=$inputs_dir/$input_name
-
-# Check if each argument is provided
-if [ -z "$1" ] ; then
-    echo "Error: Missing arguments."
-    echo "Usage: $0 <input.json> "
-    exit 1
-fi
-"""
-
-# Basic inputs
-basic_input_temp = """
-inputs_dir=$cwd/{predictor.inputs_unix}
-outputs_dir=$cwd/{predictor.outputs_unix}
-"""
-
-
-# Looper
-looper_temp = """
-for file in $inputs_dir/*{file_extension}; do
-    {execution_command}
-done
-"""
-
-header_clusteriqac="""#SBATCH --job-name={predictor.name}
-#SBATCH -e %j.err
-#SBATCH -o %j.out
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
-#SBATCH --ntasks-per-node=1
-#SBATCH --partition=long
-#SBATCH --gres=gpu:1
-"""
-
-header_csuc="""#SBATCH --job-name={predictor.name}
-#SBATCH -e %j.err
-#SBATCH -o %j.log
-#SBATCH -t 00-01:00
-#SBATCH -p gpu
-#SBATCH --gres=gpu:1
-#SBATCH -n 32
-"""
-
-headers_dict = {"clusteriqac": header_clusteriqac,
-                "csuc": header_csuc,
-                "default": header_clusteriqac}
-
-# Line for jobarrays
-jobarr_temp = """#SBATCH --array=1-{0}%{1}
-
-"""
 
 
 def get_header(header_key: bool | str) -> str:
     if isinstance(header_key, str):
         try:
-            return headers_dict[header_key]
+            return jt.headers_dict[header_key]
         except:
             print(f"{header_key} header is not found. Returning default one")
-            return headers_dict["default"]
+            return jt.headers_dict["default"]
     elif isinstance(header_key, bool) and header_key is True:
         print("No header selected. Returning default one")
-        return headers_dict["default"]
+        return jt.headers_dict["default"]
 
 
 
@@ -106,7 +37,7 @@ def gen_jobarray(system_list:list[System], predictor:Predictor, max_cap_jobs=Non
     num_jobs = len(system_list)
     num_cap_jobs = num_jobs if max_cap_jobs is None else max_cap_jobs
     header_txt = get_header(predictor.runner_params.header)
-    jobarr_header = "#!/bin/bash\n" + header_txt.format(predictor=predictor) + jobarr_temp.format(num_jobs, num_cap_jobs)
+    jobarr_header = "#!/bin/bash\n" + header_txt.format(predictor=predictor) + jt.jobarr_temp.format(num_jobs, num_cap_jobs)
 
     # Runner file relative path
     runner_file_rel_path = os.path.join(".",predictor.runners,f"{predictor.name}_runner.sh")
@@ -137,16 +68,6 @@ def fix_commands_for_loop(txt:str) -> str:
     return new_txt
 
 
-###### Params ######
-"""
-header = False | True # depends on local or cluster. Cluster should have an option to choose cluster header
-extra_cmds = False | True # If there are extra commands
-extra_inputs = False | True # Only True for job arrays
-looper = False | True # True if looper indicat, false if not (in certain cases and in jobarrays)
-jobarray = False | True # True only if jobarray
-"""
-
-
 def gen_runner(system_list:list[System], predictor: Predictor):
     # Getting header. TODO: when we have params for this, we will have a function here
     if not predictor.runner_params.header:
@@ -156,10 +77,10 @@ def gen_runner(system_list:list[System], predictor: Predictor):
 
     
     # Processing inputs
-    basic_input = basic_input_temp.format(predictor=predictor)
+    basic_input = jt.basic_input_temp.format(predictor=predictor)
     
     if predictor.runner_params.extra_inputs:
-        inputs_txt = "\n".join([basic_input, extra_inputs_txt])
+        inputs_txt = "\n".join([basic_input, jt.extra_inputs_txt])
     else:
         inputs_txt = basic_input
     
@@ -172,13 +93,13 @@ def gen_runner(system_list:list[System], predictor: Predictor):
     # Processing main commands 
     if predictor.runner_params.looper:
         new_cmds = fix_commands_for_loop(predictor.main_cmds)
-        main_cmds_txt = looper_temp.format(file_extension=predictor.input_extension,
+        main_cmds_txt = jt.looper_temp.format(file_extension=predictor.input_extension,
                                            execution_command=new_cmds)
     else:
         main_cmds_txt = predictor.main_cmds
     
     # Assemble everything
-    runner_txt = general_temp.format(header=header_txt,
+    runner_txt = jt.general_temp.format(header=header_txt,
                                     inputs_section=inputs_txt,
                                     extras=extra_cmds_txt,
                                     execution_section=main_cmds_txt)
