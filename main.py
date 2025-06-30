@@ -4,9 +4,8 @@ Spring 2025
 
 
 You will execute this via command line and give
-- csv path with system name and sequences and smiles
+- json path with system name and sequences and smiles
 - the predictors to use
-- A place to dump the outputs
 """
 
 
@@ -17,19 +16,8 @@ import os
 from info import predictors_library
 from jobscripts import gen_runner
 
-def main():
-    # Create the parser
-    parser = argparse.ArgumentParser(description='Generate input files for the given sequences in a .json. The structure predictors to be used can be specified with -p')
 
-    # Add the required argument for the CSV file
-    parser.add_argument('input_json', type=str, help='Path to the input .json file')
-
-    # Add the optional argument for a list of strings
-    parser.add_argument('--predictors','-p', type=str, nargs='*' ,help='Optional list of predictors to use. Default all predictors ')
-    # parser.add_argument("--only_prot", action="store_true", help="Optional key to only generate inputs of the protein part.")
-    
-    # Parse the arguments
-    args = parser.parse_args()
+def main(args):
 
     # Read inputs
     system_list = read_input_json(args.input_json)
@@ -40,7 +28,7 @@ def main():
         predictors_name_list = predictors_library.keys()
 
 
-    # Start doing things (TODO: put this in funcs)
+    # Start doing things
     print("Generating inputs for the following predictors:")
     for predictor_name in predictors_name_list:
         print(f"------{predictor_name}------")
@@ -60,4 +48,16 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # Create the parser
+    parser = argparse.ArgumentParser(description='Generate input files for the given sequences in a .json. The structure predictors to be used can be specified with -p')
+    # Add the required argument for the JSON file
+    parser.add_argument('input_json', type=str, help='Path to the input .json file')
+
+    # Add the optional argument for a list of strings
+    parser.add_argument('--predictors','-p', type=str, nargs='*' ,
+                        help=f'Optional list of predictors to use. Default all predictors. Predictors available: {list(predictors_library.keys())}')
+
+    # Parse the arguments
+    args = parser.parse_args()
+    
+    main(args)
