@@ -186,7 +186,7 @@ As a final step, you should add the predictor in `info.py`:
 
 Now, the only thing that's left is try if it works!
     
-## I want to modify the strings in jobscripts_templates. Can I get a guide into what is there?
+## I want to modify the strings in jobscripts_templates. Can I get a guide into what's in there?
 Sure! Here is what's in there:
 - **general_temp**: General template of a runner.     Contains the formatting strings:
     - `{header}`: place for cluster headers and such
