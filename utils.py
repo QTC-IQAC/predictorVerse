@@ -5,7 +5,6 @@ Utility functions
 """
 import os
 import json
-# from info import predictors_library
 
 
 class System:
@@ -297,6 +296,8 @@ def gen_subinputs(system:System, predictor:Predictor): # Aquí també va predict
     """ 
     Generates the input text that contain information about the sequences
     """
+    alphabet = alphabet_generator()
+
     list_subinputs = []
     for field in ["protein","ligand"]:
         try:
@@ -304,7 +305,7 @@ def gen_subinputs(system:System, predictor:Predictor): # Aquí també va predict
         except:
             continue
         list_subinputs.append( predictor.joiner.join(
-            [txt.format(system=system, predictor=predictor, seq=dd, ii=ii) 
+            [txt.format(system=system, predictor=predictor, seq=dd, ii=ii,letter=next(alphabet)) 
             for ii,dd in enumerate(data)])   
             )
     
