@@ -243,33 +243,6 @@ def read_input_json(json_file: str) -> list:
     return system_list
 
 
-
-def gen_fasta(system:System ,out_path:str, mode=None|str)-> None:
-    """
-    Generate fasta for system. Default structure is Chai-1 type
-    out_path: path were to write the fastas
-    mode = None (makes fasta with all the things in system). 
-           protein (makes fasta of the protein only)
-           ligand (makes fasta only of the ligand only)
-
-    """
-    if mode is None:                suffix = ""
-    elif mode.lower() == "protein": suffix = "_prot"
-    elif mode.lower() == "ligand":  suffix = "_lig"
-    else: raise ValueError("Mode is not correct. Should be None, protein or ligand.")
-
-    fasta_file = os.path.join(out_path,f"{system.name}{suffix}.fasta")
-    
-    fff = open(fasta_file,"w")
-    
-    if mode is None or mode.lower() == "protein" :
-        fff.write(f">protein|{system.name}_prot\n{system.seq}\n")
-
-    if mode is None or mode.lower() == "ligand":
-        fff.write(f">ligand|{system.name}_lig\n{system.smiles}\n")
-
-    fff.close()
-
 def alphabet_generator():
     """
     An alphabet generator to put correct chain letters in AF3, RFAA and the like
@@ -325,15 +298,6 @@ def gen_input(system:System, predictor: Predictor) -> None:
 
     input_file = os.path.join(predictor.inputs,system.name+input_extension)
 
-    # if not only_prot:
-    #     prot_text = prot_template.format(system=system,predictor=predictor)
-    #     lig_text = lig_template.format(system=system,predictor=predictor)
-    #     inputs_to_join = [prot_text,lig_text]
-    
-    # elif only_prot:
-    #     prot_text = prot_template.format(system=system,predictor=predictor)
-    #     inputs_to_join = [prot_text]
-
     subinputs_to_join = gen_subinputs(system,predictor)
     
     input_text = joiner.join(subinputs_to_join)
@@ -344,14 +308,12 @@ def gen_input(system:System, predictor: Predictor) -> None:
 
     # If there are other functions (in predictor_data["other_funcs"]), execute them
     if predictor.other_funcs is not None:
-        for func in predictor.other_funcs:
-            func(system, predictor)
+        try:
+            for func in predictor.other_funcs:
+                func(system, predictor)
+        except:
+            print(f"WARNING: other_funcs value in {predictor.name} is not iterable. Skipping")
     
-    # try:
-
-    # except:
-    #     print(f"WARNING: No other funcs were found for {predictor.name} or is not iterable. Skipping")
-
 
 
 def check_predictor_exists(predictor_id_list: list[str], predictors_library: dict) -> list[str]: 

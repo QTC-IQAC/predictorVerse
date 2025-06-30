@@ -2,8 +2,7 @@
 Berta Bori Bru - IQAC-CSIC
 Spring 2025
 """
-from utils import System, Predictor, RunnerParams
-import os
+from utils import Predictor, RunnerParams
 from predictor_templates.boltz1 import boltz_prot_fasta, boltz_lig_fasta, boltz_fasta_template
 
 exec_command = "boltz predict $inputs_dir --use_msa_server --diffusion_samples 10 --out_dir $outputs_dir --output_format pdb"

@@ -12,7 +12,6 @@ You will execute this via command line and give
 from utils import System, Predictor
 from utils import read_input_json, check_predictor_exists, gen_input
 import argparse
-import os
 from info import predictors_library
 from jobscripts import gen_runner
 

@@ -1,5 +1,4 @@
-import os
-from utils import System, Predictor, RunnerParams
+from utils import Predictor, RunnerParams
 
 
 # Double braces to not confuse with {0}

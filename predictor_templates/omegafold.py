@@ -1,5 +1,5 @@
-import os
-from utils import System, Predictor, RunnerParams
+
+from utils import Predictor, RunnerParams
 
 """
 TODO: OF only produces 1 output. Make it so:

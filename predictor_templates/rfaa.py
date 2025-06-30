@@ -1,6 +1,4 @@
-import sys
 import os
-import utils as uu
 from utils import System, Predictor, RunnerParams
 
 from rdkit import Chem # main tools
@@ -27,8 +25,8 @@ output_path: ./{predictor.outputs_unix}
 
 extra_cmds = "cd /home/ramon/progs/RoseTTAFold-All-Atom  # path to the directory where RFAA is installed"
 
-exec_command = """# Change the relative path for absolute ones (will need to run this from the folder before Galaxy42_inputs)
-sed -i "s|\./|$cwd/|g" $file
+exec_command = """# Change the relative path for absolute ones
+sed -i "s|\\./|$cwd/|g" $file
 
 
 # Split input file into file name and folder
