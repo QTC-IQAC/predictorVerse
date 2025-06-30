@@ -32,7 +32,7 @@ echo "FINAL DATE: $final_date"
 """
 
 
-# Line for jobarrays
+# Line for jobarrays. {0}: number of total jobs. {1} max number of jobs to run simultaneously
 jobarr_temp = """#SBATCH --array=1-{0}%{1}
 
 """

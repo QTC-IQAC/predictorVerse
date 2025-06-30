@@ -237,7 +237,7 @@ def read_input_json(json_file: str) -> list:
     Read a .json to extract info of the systems to write
     
     """
-    input_info = json.load(open("test.json"))
+    input_info = json.load(open(json_file))
     system_list = [System(kk,vv) for kk,vv in input_info.items()]
     
     return system_list
