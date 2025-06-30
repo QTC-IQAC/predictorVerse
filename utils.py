@@ -4,14 +4,31 @@ Berta Bori Bru
 Utility functions
 """
 import os
-# from info import predictors_library
+import json
 
 
 class System:
-    def __init__(self, name, seq, smiles ):
+    def __init__(self, name: str, data_dict: dict):
         self.name = name #system name
-        self.seq = seq #protein sequence
-        self.smiles = smiles #smiles sequence
+        self.inner_dct = dict()
+        
+        for kk, vv in data_dict.items():
+            if kk not in ["protein","ligand"]: # Handle other types of names
+                raise ValueError(f"Incorrect data field for '{kk}': can only be protein or ligand")
+            
+            if type(vv) is not list and type(vv) is not str: # Handle other types of data 
+                raise TypeError(f"Incorrect data type for '{vv}' in '{self.name}, {kk}': can only be str or list")
+            
+            # Handle the passing of list and str differently
+            if type(vv) is list:
+                self.inner_dct[kk] = vv
+                setattr(self, kk, vv)
+            
+            elif type(vv) is str:
+                self.inner_dct[kk] = [vv]
+                setattr(self, kk, [vv])
+    
+
 
 class RunnerParams:
     def __init__(self,
@@ -214,20 +231,13 @@ class Predictor:
 
 ##### Functions #####
 
-def read_input_csv(csv_file: str, sep=",") -> list:
+def read_input_json(json_file: str) -> list:
     """
-    Read a .csv to extract info of the systems to write
+    Read a .json to extract info of the systems to write
     
     """
-    
-    system_list = []
-    with open(csv_file,"r") as ff:
-        header  = ff.readline() # separate header
-        
-        for sys in ff.readlines():
-            name,seq,smiles = sys.split(sep)
-            smiles = smiles.strip()
-            system_list.append(System(name,seq,smiles))
+    input_info = json.load(open("test.json"))
+    system_list = [System(kk,vv) for kk,vv in input_info.items()]
     
     return system_list
 
@@ -259,43 +269,87 @@ def gen_fasta(system:System ,out_path:str, mode=None|str)-> None:
 
     fff.close()
 
+def alphabet_generator():
+    """
+    An alphabet generator to put correct chain letters in AF3, RFAA and the like
+    """
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for letter in alphabet:
+        yield letter
 
 
-def gen_input(system:System, predictor: Predictor, only_prot=False) -> None:
+def combinations(field:str, system:System, predictor:Predictor): #predictor tmb aniria aqui
+    """ 
+    Returns the combinations of system sequences in a determinate field and its corresponding predictor input template
+    For now only handles protein and ligand fields
+    """
+
+    if field.lower() == "protein":
+        return system.protein, predictor.prot_temp
+
+    
+    elif field.lower() == "ligand":
+        return system.ligand, predictor.lig_temp
+
+
+def gen_subinputs(system:System, predictor:Predictor): # Aquí també va predictor
+    """ 
+    Generates the input text that contain information about the sequences
+    """
+    alphabet = alphabet_generator()
+
+    list_subinputs = []
+    for field in ["protein","ligand"]:
+        try:
+            data,txt = combinations(field, system, predictor)
+        except:
+            continue
+        list_subinputs.append( predictor.joiner.join(
+            [txt.format(system=system, predictor=predictor, seq=dd, ii=ii,letter=next(alphabet)) 
+            for ii,dd in enumerate(data)])   
+            )
+    
+    return list_subinputs
+
+
+
+def gen_input(system:System, predictor: Predictor) -> None:
     """
     input_template: text of the input. formated with system and predictor attributes
     input_extension: extension of the file. Ex: ".json", ".fasta"
     """
     input_extension = predictor.input_extension
     general_template = predictor.prot_lig_temp
-    prot_template = predictor.prot_temp
-    lig_template = predictor.lig_temp
     joiner = predictor.joiner
 
     input_file = os.path.join(predictor.inputs,system.name+input_extension)
 
-    if not only_prot:
-        prot_text = prot_template.format(system=system,predictor=predictor)
-        lig_text = lig_template.format(system=system,predictor=predictor)
-        inputs_to_join = [prot_text,lig_text]
+    # if not only_prot:
+    #     prot_text = prot_template.format(system=system,predictor=predictor)
+    #     lig_text = lig_template.format(system=system,predictor=predictor)
+    #     inputs_to_join = [prot_text,lig_text]
     
-    elif only_prot:
-        prot_text = prot_template.format(system=system,predictor=predictor)
-        inputs_to_join = [prot_text]
+    # elif only_prot:
+    #     prot_text = prot_template.format(system=system,predictor=predictor)
+    #     inputs_to_join = [prot_text]
+
+    subinputs_to_join = gen_subinputs(system,predictor)
     
-    input_text = joiner.join(inputs_to_join)
+    input_text = joiner.join(subinputs_to_join)
     final_input = general_template.format(input=input_text, system=system, predictor=predictor)
     
     with open(input_file, "w") as file:
         file.write(final_input)
 
     # If there are other functions (in predictor_data["other_funcs"]), execute them
-    try:
-        if predictor.other_funcs is not None:
-            for func in predictor.other_funcs:
-                func(system, predictor)
-    except:
-        print(f"WARNING: No other funcs were found for {predictor.name} or is not iterable. Skipping")
+    if predictor.other_funcs is not None:
+        for func in predictor.other_funcs:
+            func(system, predictor)
+    
+    # try:
+
+    # except:
+    #     print(f"WARNING: No other funcs were found for {predictor.name} or is not iterable. Skipping")
 
 
 

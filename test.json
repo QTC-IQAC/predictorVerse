@@ -1,0 +1,26 @@
+{
+    "hola":
+        {"protein":["KUKUKUKUKU",
+                    "LOLOLOLOLOLO"]
+        ,
+        "ligand":"N1=C(C=NC2=C1C=CC=C2)OP(OCC)(OCC)S"
+
+        },
+    
+    "hola2":
+        {"protein":["KUKUKUKUKU",
+                    "LOLOLOLOLOLO"]
+        ,
+        "ligand":"N1=C(C=NC2=C1C=CC=C2)OP(OCC)(OCC)S"
+        
+        },
+    
+    "hola3":
+        {"protein":["KUKUKUKUKU",
+                    "LOLOLOLOLOLO"]
+        
+        }
+
+
+
+}

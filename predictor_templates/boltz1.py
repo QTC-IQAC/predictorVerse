@@ -5,8 +5,8 @@ Spring 2025
 from utils import System, Predictor, RunnerParams
 import os
 
-boltz_prot_fasta = """>A|protein||{system.name}_prot\n{system.seq}"""
-boltz_lig_fasta = """>B|smiles||{system.name}_lig\n{system.smiles}"""
+boltz_prot_fasta = """>A|protein||{system.name}_prot\n{seq}"""
+boltz_lig_fasta = """>B|smiles||{system.name}_lig\n{seq}"""
 boltz_fasta_template = """{input}"""
 
 exec_command = "boltz predict $file --use_msa_server --diffusion_samples 10 --out_dir $outputs_dir"
