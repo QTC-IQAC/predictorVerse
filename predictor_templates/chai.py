@@ -4,8 +4,8 @@ Spring 2025
 """
 from utils import Predictor, RunnerParams
 
-chai_prot_fasta = """>protein|{system.name}_prot\n{seq}"""
-chai_lig_fasta = """>ligand|{system.name}_lig\n{seq}"""
+chai_prot_fasta = """>protein|{system.name}_prot_{letter}\n{seq}"""
+chai_lig_fasta = """>ligand|{system.name}_lig_{letter}\n{seq}"""
 chai_fasta_template = """{input}"""
 
 exec_command = """# Get name of system
