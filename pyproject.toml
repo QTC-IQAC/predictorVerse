@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "predictorVerse"
+version = "1.0"
+description = "Automatic structure predictor generator for protein/ligand based systems"
+authors = [
+  { name="Berta Bori Bru", email="berta.bobru@gmail.com" },
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # "rdkit-2025.3.4"
+]
+
+[project.scripts]
+# Optional: CLI entry point (python -m program.main or a CLI tool)
+program = "predictorVerse.main:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
