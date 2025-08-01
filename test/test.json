@@ -1,27 +1,26 @@
 {
-    "hola":
-        {"protein":["KUKUKUKUKU",
-                    "LOLOLOLOLOLO"]
+    "sys1":
+        {"protein":["VALEVALEVALE",
+                    "GAGAGAGAGAGA"]
         ,
-        "ligand":"N1=C(C=NC2=C1C=CC=C2)OP(OCC)(OCC)S"
+        "ligand":"C1=CC=C(C=C1)O"
 
         },
     
-    "hola2":
-        {"protein":["KUKUKUKUKU",
-                    "LOLOLOLOLOLO"]
+    "sys2":
+        {"protein":"VALEVALEVALE"
         ,
-        "ligand":"N1=C(C=NC2=C1C=CC=C2)OP(OCC)(OCC)S"
+        "ligand":"C1=CC=C(C=C1)O"
         
         },
     
-    "hola3":
-        {"protein":["KUKUKUKUKU",
-                    "LOLOLOLOLOLO"]
+    "sys3":
+        {"protein":["VALEVALEVALE",
+                    "GAGAGAGAGAGA"]
         
         },
 
-    "hola4":
+    "sys4":
         {}
 
 
