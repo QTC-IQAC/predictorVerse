@@ -239,6 +239,7 @@ def read_input_json(json_file: str) -> list:
     """
     input_info = json.load(open(json_file))
     system_list = [System(kk,vv) for kk,vv in input_info.items()]
+    print(f"Found {len(system_list)} systems")
     
     return system_list
 
