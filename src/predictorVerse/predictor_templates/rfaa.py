@@ -1,5 +1,5 @@
 import os
-from utils import System, Predictor, RunnerParams
+from predictorVerse.utils import System, Predictor, RunnerParams
 
 from rdkit import Chem # main tools
 from rdkit.Chem import AllChem # additional tools, including 3D

@@ -2,7 +2,7 @@
 Berta Bori Bru - IQAC-CSIC
 Spring 2025
 """
-from utils import Predictor, RunnerParams
+from predictorVerse.utils import Predictor, RunnerParams
 
 chai_prot_fasta = """>protein|{system.name}_prot_{letter}\n{seq}"""
 chai_lig_fasta = """>ligand|{system.name}_lig_{letter}\n{seq}"""

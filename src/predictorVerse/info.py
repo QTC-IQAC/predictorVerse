@@ -6,12 +6,12 @@ Spring 2025
 Dictionary with the information of the predictors available for the program
 """
 
-from predictor_templates.af3 import af3_data
-from predictor_templates.chai import chai_data
-from predictor_templates.boltz1 import boltz_data
-from predictor_templates.omegafold import of_data
-from predictor_templates.rfaa import rfaa_data
-from predictor_templates.boltz1x import boltz1x_data
+from predictorVerse.predictor_templates.af3 import af3_data
+from predictorVerse.predictor_templates.chai import chai_data
+from predictorVerse.predictor_templates.boltz1 import boltz_data
+from predictorVerse.predictor_templates.omegafold import of_data
+from predictorVerse.predictor_templates.rfaa import rfaa_data
+from predictorVerse.predictor_templates.boltz1x import boltz1x_data
 
 
 predictors_library = { "AF3": af3_data, # AlphaFold3

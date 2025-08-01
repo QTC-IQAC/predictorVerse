@@ -9,8 +9,8 @@ Functions to generate runner files for the predictors
 
 
 import os 
-from utils import System, Predictor
-import predictor_templates.jobscripts_templates as jt
+from predictorVerse.utils import System, Predictor
+import predictorVerse.predictor_templates.jobscripts_templates as jt
 
 
 

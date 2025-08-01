@@ -9,14 +9,17 @@ You will execute this via command line and give
 """
 
 
-from utils import System, Predictor
-from utils import read_input_json, check_predictor_exists, gen_input
+# from predictorVerse.utils import System, Predictor
+from predictorVerse.utils import read_input_json, check_predictor_exists, gen_input
+from predictorVerse.info import predictors_library
+from predictorVerse.jobscripts import gen_runner
+
 import argparse
-from info import predictors_library
-from jobscripts import gen_runner
 
 
-def main(args):
+def main():
+    # Get arguments
+    args = argparsing()
 
     # Read inputs
     system_list = read_input_json(args.input_json)
@@ -45,8 +48,7 @@ def main(args):
         # Generate runner
         gen_runner(system_list,predictor)
 
-
-if __name__ == '__main__':
+def argparsing():
     # Create the parser
     parser = argparse.ArgumentParser(description='Generate input files for the given sequences in a .json. The structure predictors to be used can be specified with -p')
     # Add the required argument for the JSON file
@@ -57,6 +59,7 @@ if __name__ == '__main__':
                         help=f'Optional list of predictors to use. Default all predictors. Predictors available: {list(predictors_library.keys())}')
 
     # Parse the arguments
-    args = parser.parse_args()
-    
-    main(args)
+    return parser.parse_args()
+
+if __name__ == '__main__':
+    main()

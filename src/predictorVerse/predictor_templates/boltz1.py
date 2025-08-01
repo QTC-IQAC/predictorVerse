@@ -2,7 +2,7 @@
 Berta Bori Bru - IQAC-CSIC
 Spring 2025
 """
-from utils import Predictor, RunnerParams
+from predictorVerse.utils import Predictor, RunnerParams
 
 boltz_prot_fasta = """>A|protein||{system.name}_prot_{letter}\n{seq}"""
 boltz_lig_fasta = """>B|smiles||{system.name}_lig_{letter}\n{seq}"""

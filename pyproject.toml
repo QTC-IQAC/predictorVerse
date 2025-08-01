@@ -12,12 +12,12 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    # "rdkit-2025.3.4"
+    "rdkit"
 ]
 
 [project.scripts]
 # Optional: CLI entry point (python -m program.main or a CLI tool)
-program = "predictorVerse.main:main"
+predictorVerse = "predictorVerse.main:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

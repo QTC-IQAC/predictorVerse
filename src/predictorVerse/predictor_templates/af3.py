@@ -1,4 +1,4 @@
-from utils import Predictor, RunnerParams
+from predictorVerse.utils import Predictor, RunnerParams
 
 
 # Double braces to not confuse with {0}
