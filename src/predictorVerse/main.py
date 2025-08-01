@@ -17,18 +17,18 @@ from predictorVerse.jobscripts import gen_runner
 import argparse
 
 
-def main():
-    # Get arguments
-    args = argparsing()
+def gen_predictor_inputs(input_json:str, predictors_list:list|None=None):
+    """
+    Core of the module
+    """
 
     # Read inputs
-    system_list = read_input_json(args.input_json)
+    system_list = read_input_json(input_json)
 
-    if args.predictors:
-        predictors_name_list = check_predictor_exists(args.predictors, predictors_library)
+    if predictors_list:
+        predictors_name_list = check_predictor_exists(predictors_list, predictors_library)
     else:
         predictors_name_list = predictors_library.keys()
-
 
     # Start doing things
     print("Generating inputs for the following predictors:")
@@ -48,6 +48,7 @@ def main():
         # Generate runner
         gen_runner(system_list,predictor)
 
+
 def argparsing():
     # Create the parser
     parser = argparse.ArgumentParser(description='Generate input files for the given sequences in a .json. The structure predictors to be used can be specified with -p')
@@ -60,6 +61,15 @@ def argparsing():
 
     # Parse the arguments
     return parser.parse_args()
+
+
+def main():
+    # Get arguments
+    args = argparsing()
+
+    # Do things
+    gen_predictor_inputs(args.input_json, args.predictors)
+
 
 if __name__ == '__main__':
     main()
