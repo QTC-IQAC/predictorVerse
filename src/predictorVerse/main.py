@@ -19,7 +19,7 @@ import argparse
 
 def gen_predictor_inputs(input_json:str, predictors_list:list|None=None):
     """
-    Core of the module
+    Core of the module.
     """
 
     # Read inputs

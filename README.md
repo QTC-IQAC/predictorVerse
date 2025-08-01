@@ -14,37 +14,32 @@ You get:
 
 # Requirements, intallation and stuff
 ## Installation
-TODO
-Install dependencies
-```bash
-conda create -n predictorVerse pyhton=3.12 pip
-conda activate predictorVerse
-pip install rdkit
-```
-
-Install the repo somewhere with
 ```bash
 git clone blablabalba
-```
-
-(Recomended) generate an alias in `.bash_aliases` like:
-```bash
-alias predictorVerse="python [path_to]/predictorVerse/main.py"
+cd predictorVerse
+pip install .
 ```
 
 ## Execution
-To generate several inputs for all the available structure predictors:
+predictorVerse can be run through CLI:
 ```bash
-python main.py test.json
+cd test
+predictorVerse test.json        # Generates inputs for all the available predictors
+predictorVerse test.json -p AF3 # Only generates inputs for AF3
 ```
-To only do that for specific predictors:
-```bash
-python main.py test.json -p AF3 Chai
+
+or through module import 
+```python
+from predictorVerse.main import gen_predictor_inputs
+gen_predictor_inputs("test/test.json")  # Generates inputs for all the available predictors
+gen_predictor_inputs("test/test.json",["AF3"])
 ```
+
 Note that the predictor keys passed to predictorVerse have to be available. To check that, see the help message of the program available using
 ```bash
 python main.py -h
 ```
+
 
 ## Input file
 The .json input file accepts any number of systems, each containing any number (max 27 in total) of proteins and ligands (dna and rna might come someday). The input should look like:
@@ -73,7 +68,7 @@ The .json input file accepts any number of systems, each containing any number (
 There can be a different number of ligands and protein in the defined systems. If the "ligand" or "protein" properties are not defined, there is no problem. If both of them are not defined, the program generates an empty input file.
 
 ## Output
-predictorVerse generates a series of folders in the current folder you are executing it in:
+predictorVerse generates a series of folders in the **current folder** you are executing it in:
 ```
 .
 └── current_folder/
