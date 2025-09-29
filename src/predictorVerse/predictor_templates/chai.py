@@ -12,7 +12,7 @@ exec_command = """# Get name of system
 
 system=$(basename $file | sed "s/.fasta//g")
 mkdir -p $outputs_dir/$system
-chai-lab fold --seed 13 --num-diffn-samples 10 $file $outputs_dir/$system
+chai-lab fold --seed 13 --num-diffn-samples 10 --num-trunk-recycles 3 $file $outputs_dir/$system
 """
 
 runner_params = RunnerParams(header=False,
