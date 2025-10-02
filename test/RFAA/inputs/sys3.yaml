@@ -1,0 +1,11 @@
+defaults:
+- base
+- _self_
+job_name: sys3
+output_path: ./RFAA/outputs
+protein_inputs:
+  A:
+    fasta_file: ./RFAA/inputs/fastas/sys3_prot0.fasta
+protein_inputs:
+  B:
+    fasta_file: ./RFAA/inputs/fastas/sys3_prot1.fasta

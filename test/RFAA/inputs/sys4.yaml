@@ -1,0 +1,13 @@
+defaults:
+- base
+- _self_
+job_name: sys4
+output_path: ./RFAA/outputs
+sm_inputs:
+  A:
+    input: ./RFAA/inputs/fastas/sys4_lig0.sdf
+    input_type: 'sdf'
+sm_inputs:
+  B:
+    input: ./RFAA/inputs/fastas/sys4_lig1.sdf
+    input_type: 'sdf'

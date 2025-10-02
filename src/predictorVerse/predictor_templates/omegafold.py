@@ -13,7 +13,7 @@ TODO: OF only produces 1 output. Make it so:
 of_prot_fasta = """>{system.name}_prot\n{seq}"""
 of_fasta_template = """{input}"""
 
-exec_command = "omegafold $file $output_dir"
+exec_command = "omegafold $file $output_dir --num_cycle {recycles}"
 
 
 runner_params = RunnerParams(header="clusteriqac",

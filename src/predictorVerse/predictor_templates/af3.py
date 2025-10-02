@@ -43,7 +43,7 @@ exec_command = """singularity exec  \\
            /prod/container/alphafold3/alphafold3.sif \\
      python run_alphafold.py --model_dir=/root/models --db_dir=/root/public_databases \\
               --json_path=/root/$input \\
-              --output_dir=/root/$outputs_dir --num_recycles 3
+              --output_dir=/root/$outputs_dir --num_recycles {recycles}
 """
 
 runner_params = RunnerParams(header="csuc",

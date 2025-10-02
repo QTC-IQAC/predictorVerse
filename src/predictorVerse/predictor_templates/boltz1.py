@@ -8,7 +8,7 @@ boltz_prot_fasta = """>A|protein||{system.name}_prot_{letter}\n{seq}"""
 boltz_lig_fasta = """>B|smiles||{system.name}_lig_{letter}\n{seq}"""
 boltz_fasta_template = """{input}"""
 
-exec_command = "boltz predict $file --use_msa_server --diffusion_samples 10 --out_dir $outputs_dir"
+exec_command = "boltz predict $file --use_msa_server --diffusion_samples {samples} --recycling_steps {recycles} --out_dir $outputs_dir"
 
 runner_params = RunnerParams(header="clusteriqac",
                              extra_cmds=False,

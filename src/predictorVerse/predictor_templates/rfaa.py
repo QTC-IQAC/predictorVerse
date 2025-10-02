@@ -75,7 +75,7 @@ def lig_smiles_to_sdf(system:System, predictor: Predictor):
       # cid = AllChem.EmbedMolecule(mol) # returns the id of the generated conformer,
       #                                 # and -1 if no conformers were generated
 
-      AllChem.MMFFOptimizeMolecule(mol) # optimize molecule with MMFF94
+      # AllChem.MMFFOptimizeMolecule(mol) # optimize molecule with MMFF94
       writer = Chem.SDWriter(sdf_file) # Write in .sdf file
       writer.write(mol)
 

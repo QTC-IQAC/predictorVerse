@@ -3,7 +3,7 @@
         {"protein":["VALEVALEVALE",
                     "GAGAGAGAGAGA"]
         ,
-        "ligand":"C1=CC=C(C=C1)O"
+        "ligand":"C(=O)=O"
 
         },
     

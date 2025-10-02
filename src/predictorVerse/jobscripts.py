@@ -68,7 +68,7 @@ def fix_commands_for_loop(txt:str) -> str:
     return new_txt
 
 
-def gen_runner(system_list:list[System], predictor: Predictor):
+def gen_runner(system_list:list[System], predictor: Predictor, samples:int, recycles:int):
     # Getting header. TODO: when we have params for this, we will have a function here
     if not predictor.runner_params.header:
         header_txt = ""
@@ -91,12 +91,15 @@ def gen_runner(system_list:list[System], predictor: Predictor):
         extra_cmds_txt = ""
 
     # Processing main commands 
+    ## Add sample and recycles info
+    main_cmd = predictor.main_cmds.format(samples=samples, recycles=recycles)
+
     if predictor.runner_params.looper:
-        new_cmds = fix_commands_for_loop(predictor.main_cmds)
+        new_cmds = fix_commands_for_loop(main_cmd)
         main_cmds_txt = jt.looper_temp.format(file_extension=predictor.input_extension,
                                            execution_command=new_cmds)
     else:
-        main_cmds_txt = predictor.main_cmds
+        main_cmds_txt = main_cmd
     
     # Assemble everything
     runner_txt = jt.general_temp.format(header=header_txt,

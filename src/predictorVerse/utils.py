@@ -280,7 +280,8 @@ def gen_subinputs(system:System, predictor:Predictor): # Aquí també va predict
         except:
             continue
         list_subinputs.append( predictor.joiner.join(
-            [txt.format(system=system, predictor=predictor, seq=dd, ii=ii,letter=next(alphabet)) 
+            [txt.format(system=system, predictor=predictor, seq=dd, ii=ii,
+                        letter=next(alphabet)) 
             for ii,dd in enumerate(data)])   
             )
     
@@ -309,11 +310,11 @@ def gen_input(system:System, predictor: Predictor) -> None:
 
     # If there are other functions (in predictor_data["other_funcs"]), execute them
     if predictor.other_funcs is not None:
-        try:
-            for func in predictor.other_funcs:
-                func(system, predictor)
-        except:
-            print(f"WARNING: other_funcs value in {predictor.name} is not iterable. Skipping")
+        # try:
+        for func in predictor.other_funcs:
+            func(system, predictor)
+        # except:
+        #     print(f"WARNING: other_funcs value in {predictor.name} is not iterable. Skipping")
     
 
 

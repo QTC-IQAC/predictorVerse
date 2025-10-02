@@ -17,7 +17,7 @@ from predictorVerse.jobscripts import gen_runner
 import argparse
 
 
-def gen_predictor_inputs(input_json:str, predictors_list:list|None=None):
+def gen_predictor_inputs(input_json:str, predictors_list:list, samples:int, recycles:int):
     """
     Core of the module.
     """
@@ -25,10 +25,10 @@ def gen_predictor_inputs(input_json:str, predictors_list:list|None=None):
     # Read inputs
     system_list = read_input_json(input_json)
 
-    if predictors_list:
-        predictors_name_list = check_predictor_exists(predictors_list, predictors_library)
-    else:
-        predictors_name_list = predictors_library.keys()
+    # if predictors_list:
+    predictors_name_list = check_predictor_exists(predictors_list, predictors_library)
+    # else:
+    #     predictors_name_list = predictors_library.keys()
 
     # Start doing things
     print("Generating inputs for the following predictors:")
@@ -46,7 +46,7 @@ def gen_predictor_inputs(input_json:str, predictors_list:list|None=None):
             gen_input(system, predictor)
 
         # Generate runner
-        gen_runner(system_list,predictor)
+        gen_runner(system_list, predictor, samples, recycles)
 
 
 def argparsing():
@@ -56,9 +56,12 @@ def argparsing():
     parser.add_argument('input_json', type=str, help='Path to the input .json file')
 
     # Add the optional argument for a list of strings
-    parser.add_argument('--predictors','-p', type=str, nargs='*' ,
+    parser.add_argument('--predictors','-p', type=str, nargs='*',default=predictors_library.keys() ,
                         help=f'Optional list of predictors to use. Default all predictors. Predictors available: {list(predictors_library.keys())}')
-
+    parser.add_argument('--samples','-s',type=int,nargs=1,default=10,
+                        help="Number of samples to sample for all predictors. Default 10")
+    parser.add_argument('--recycles','-r',type=int,nargs=1,default=5,
+                        help="Number of recycles for all predictors. Default 5")    
     # Parse the arguments
     return parser.parse_args()
 
@@ -68,7 +71,7 @@ def main():
     args = argparsing()
 
     # Do things
-    gen_predictor_inputs(args.input_json, args.predictors)
+    gen_predictor_inputs(args.input_json, args.predictors, *args.samples, *args.recycles)
 
 
 if __name__ == '__main__':
