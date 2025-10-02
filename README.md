@@ -7,6 +7,7 @@ This is a highly customizable package that generates several input and runner sc
 You give:
 - A .json with protein sequence and/or ligand SMILES for different systems
 - Which predictor(s) do you want to use
+- Number of samples and recycles (optional)
 
 You get:
 - A series of organized inputs and running scripts to make the predictions
@@ -26,18 +27,19 @@ predictorVerse can be run through CLI:
 cd test
 predictorVerse test.json        # Generates inputs for all the available predictors
 predictorVerse test.json -p AF3 # Only generates inputs for AF3
+predictorVerse test.json -p AF3 -s 10 -r 5 # Generates inputs for AF3, with 10 samples and 5 recycles
 ```
 
 or through module import 
 ```python
 from predictorVerse.main import gen_predictor_inputs
 gen_predictor_inputs("test/test.json")  # Generates inputs for all the available predictors
-gen_predictor_inputs("test/test.json",["AF3"])
+gen_predictor_inputs("test/test.json",["AF3"],samples=10,recycles=5)
 ```
 
 Note that the predictor keys passed to predictorVerse have to be available. To check that, see the help message of the program available using
 ```bash
-python main.py -h
+predictorVerse -h
 ```
 
 
@@ -80,7 +82,7 @@ predictorVerse generates a series of folders in the **current folder** you are e
     ├── Boltz
     └── ...
 ```
-- **inputs**: Here the inputs for all your systems will be generated, for each predictor
+- **inputs**: Here the inputs for all your systems will be generated
 - **outputs**: Here the outputs are expected to be saved after you make the predictions
 - **runners**: Here are generated the runner files to make the predictions
 
@@ -93,7 +95,7 @@ source AF3/runners/AF3_runner.sh
 
 # predictorVerse customisation
 As previously mentioned, this is a highly customizable package (and thus might not be the most efficient), so you are expected to tweek some parts of it. 
-predictorVerse works by filling in the gaps in a bunch of template chunks and then assembling them together. In this way it is easy to be adapted to the preferences of the user. The templates are stored in the `predictor_templates` folder in a bunch of `.py` files. 
+predictorVerse works by filling in the gaps in a bunch of template chunks and then assembling them together. In this way it is easy to be adapted to the preferences of the user. The templates are stored in the `predictor_templates` folder in `.py` files. 
 
 The predictor files contain the necessary templates to generate the inputs and extra functions to generate extra files, if needed (this is the case of RFAA, which needs to generate .sdf for the ligands to run). It also contains the exact commands needed to run the predictor and any necessary "extra commands" (for example, loading a module in a cluster).
 
@@ -159,6 +161,10 @@ For step 3, the formatting parameters are:
 - `{system.name}`: the system name (for example the pdb name) for identification
 - `{predictor.inputs_unix}` and `{predictor.inputs_unix}`: the relative path to the inputs and outputs folder, respectively
 - `{input}`: where to put the information of the proteins and ligands
+
+For step 4, the formatting parameters are:
+- `{samples}`: number of samples to run for each system
+- `{recycles}`: number of recycles
 
 If any other operations need to be made to generate the inputs, you should define here the corresponding functions that do that. The functions must have as arguments `system: System, predictor: Predictor` (even if Predictor is not used). Take into account that the protein and ligand sequences are stored in a list under `system.protein` and `system.ligand`.
 

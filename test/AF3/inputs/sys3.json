@@ -1,0 +1,21 @@
+{
+    "name": "sys3",
+    "modelSeeds": [42, 43, 44, 45, 46],
+    "sequences": [
+            {
+        "protein": {
+          "id": "A",
+          "sequence": "VALEVALEVALE"
+        }
+      },
+      {
+        "protein": {
+          "id": "B",
+          "sequence": "GAGAGAGAGAGA"
+        }
+      }
+    ],
+    "dialect": "alphafold3",
+    "version": 2
+
+}

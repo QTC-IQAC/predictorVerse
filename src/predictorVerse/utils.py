@@ -289,11 +289,21 @@ def gen_subinputs(system:System, predictor:Predictor): # Aquí també va predict
 
 
 
-def gen_input(system:System, predictor: Predictor) -> None:
+def gen_input(system:System, predictor: Predictor,samples:int, recycles:int) -> None:
     """
     input_template: text of the input. formated with system and predictor attributes
     input_extension: extension of the file. Ex: ".json", ".fasta"
     """
+    
+    # If there are other functions (in predictor_data["other_funcs"]), execute them
+    if predictor.other_funcs is not None:
+        # try:
+        for func in predictor.other_funcs:
+            func(system, predictor, samples, recycles)
+        # except:
+        #     print(f"WARNING: other_funcs value in {predictor.name} is not iterable. Skipping")
+
+
     input_extension = predictor.input_extension
     general_template = predictor.prot_lig_temp
     joiner = predictor.joiner
@@ -308,13 +318,7 @@ def gen_input(system:System, predictor: Predictor) -> None:
     with open(input_file, "w") as file:
         file.write(final_input)
 
-    # If there are other functions (in predictor_data["other_funcs"]), execute them
-    if predictor.other_funcs is not None:
-        # try:
-        for func in predictor.other_funcs:
-            func(system, predictor)
-        # except:
-        #     print(f"WARNING: other_funcs value in {predictor.name} is not iterable. Skipping")
+
     
 
 

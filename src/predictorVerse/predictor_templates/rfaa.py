@@ -37,7 +37,7 @@ python -m rf2aa.run_inference --config-name $filename --config-dir "$dir"$folder
 
 """
 
-def gen_prot_fasta(system: System, predictor: Predictor):
+def gen_prot_fasta(system: System, predictor: Predictor, *args):
     """
     Generate fasta file for the protein
     """
@@ -58,7 +58,7 @@ def gen_prot_fasta(system: System, predictor: Predictor):
           fastaff.write(f">protein|{system.name}_prot\n{seq}\n")
 
 
-def lig_smiles_to_sdf(system:System, predictor: Predictor):
+def lig_smiles_to_sdf(system:System, predictor: Predictor, *args):
     """
     From ligand smiles generate a sdf file 
     """

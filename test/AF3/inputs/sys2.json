@@ -1,0 +1,21 @@
+{
+    "name": "sys2",
+    "modelSeeds": [42, 43, 44, 45, 46],
+    "sequences": [
+            {
+        "protein": {
+          "id": "A",
+          "sequence": "VALEVALEVALE"
+        }
+      },
+      {
+        "ligand": {
+          "id": "B",
+          "smiles": "C1=CC=C(C=C1)O"
+        }
+      }
+    ],
+    "dialect": "alphafold3",
+    "version": 2
+
+}

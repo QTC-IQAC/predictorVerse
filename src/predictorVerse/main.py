@@ -17,7 +17,7 @@ from predictorVerse.jobscripts import gen_runner
 import argparse
 
 
-def gen_predictor_inputs(input_json:str, predictors_list:list, samples:int, recycles:int):
+def gen_predictor_inputs(input_json:str, predictors_list:list|None=None, samples:int=10, recycles:int=5):
     """
     Core of the module.
     """
@@ -25,10 +25,10 @@ def gen_predictor_inputs(input_json:str, predictors_list:list, samples:int, recy
     # Read inputs
     system_list = read_input_json(input_json)
 
-    # if predictors_list:
-    predictors_name_list = check_predictor_exists(predictors_list, predictors_library)
-    # else:
-    #     predictors_name_list = predictors_library.keys()
+    if predictors_list:
+        predictors_name_list = check_predictor_exists(predictors_list, predictors_library)
+    else:
+        predictors_name_list = predictors_library.keys()
 
     # Start doing things
     print("Generating inputs for the following predictors:")
@@ -43,7 +43,7 @@ def gen_predictor_inputs(input_json:str, predictors_list:list, samples:int, recy
 
         # Generate input (the default fasta file)
         for system in system_list:
-            gen_input(system, predictor)
+            gen_input(system, predictor, samples, recycles)
 
         # Generate runner
         gen_runner(system_list, predictor, samples, recycles)
