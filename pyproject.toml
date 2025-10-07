@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "predictorVerse"
-version = "1.0"
+version = "1.1"
 description = "Automatic structure predictor generator for protein/ligand based systems"
 authors = [
   { name="Berta Bori Bru", email="berta.bobru@gmail.com" },

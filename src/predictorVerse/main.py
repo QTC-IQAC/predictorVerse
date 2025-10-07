@@ -58,9 +58,9 @@ def argparsing():
     # Add the optional argument for a list of strings
     parser.add_argument('--predictors','-p', type=str, nargs='*',default=predictors_library.keys() ,
                         help=f'Optional list of predictors to use. Default all predictors. Predictors available: {list(predictors_library.keys())}')
-    parser.add_argument('--samples','-s',type=int,nargs=1,default=10,
+    parser.add_argument('--samples','-s',type=int,default=10,
                         help="Number of samples to sample for all predictors. Default 10")
-    parser.add_argument('--recycles','-r',type=int,nargs=1,default=5,
+    parser.add_argument('--recycles','-r',type=int,default=5,
                         help="Number of recycles for all predictors. Default 5")    
     # Parse the arguments
     return parser.parse_args()
@@ -69,9 +69,10 @@ def argparsing():
 def main():
     # Get arguments
     args = argparsing()
-
+    print(args.samples, type(args.samples))
+    print(args.recycles, type(args.recycles))
     # Do things
-    gen_predictor_inputs(args.input_json, args.predictors, *args.samples, *args.recycles)
+    gen_predictor_inputs(args.input_json, args.predictors, args.samples, args.recycles)
 
 
 if __name__ == '__main__':
