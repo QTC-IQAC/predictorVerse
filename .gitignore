@@ -1,3 +1,4 @@
 __pycache__
 CLEAN/
 *.egg-info
+test/*

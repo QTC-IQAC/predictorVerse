@@ -6,6 +6,8 @@ from predictorVerse.utils import Predictor, RunnerParams
 
 chai_prot_fasta = """>protein|{system.name}_prot_{letter}\n{seq}"""
 chai_lig_fasta = """>ligand|{system.name}_lig_{letter}\n{seq}"""
+chai_rna_fasta = """>rna|{system.name}_rna_{letter}\n{seq}"""
+chai_dna_fasta = """>dna|{system.name}_dna_{letter}\n{seq}"""
 chai_fasta_template = """{input}"""
 
 exec_command = """# Get name of system
@@ -24,6 +26,8 @@ runner_params = RunnerParams(header=False,
 chai_data = Predictor(name = "Chai",
             prot_temp= chai_prot_fasta,
             lig_temp= chai_lig_fasta,
+            rna_temp= chai_rna_fasta,
+            dna_temp= chai_dna_fasta,
             joiner="\n",
             prot_lig_temp= chai_fasta_template,
             input_extension= ".fasta",

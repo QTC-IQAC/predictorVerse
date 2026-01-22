@@ -13,8 +13,9 @@ class System:
         self.name = name #system name
         self.inner_dct = dict()
         
-        for kk, vv in data_dict.items():
-            if kk not in ["protein","ligand"]: # Handle other types of names
+        for KK, vv in data_dict.items():
+            kk = KK.lower()
+            if kk not in ["protein","ligand","rna","dna"]: # Handle other types of names
                 raise ValueError(f"Incorrect data field for '{kk}': can only be protein or ligand")
             
             if type(vv) is not list and type(vv) is not str: # Handle other types of data 
@@ -103,6 +104,8 @@ class Predictor:
                  prot_lig_temp,
                  input_extension,
                  main_cmds,
+                 rna_temp="",
+                 dna_temp="",
                  joiner="\n",
                  other_funcs=None,
                  extra_cmds=None,
@@ -117,6 +120,8 @@ class Predictor:
 
         self.prot_temp = prot_temp
         self.lig_temp = lig_temp
+        self.rna_temp = rna_temp
+        self.dna_temp = dna_temp
         self.prot_lig_temp = prot_lig_temp
         self.input_extension = input_extension
         self.main_cmds = main_cmds
@@ -146,6 +151,28 @@ class Predictor:
             self._lig_temp = value
         else:
             raise ValueError("lig_temp must be a string.")
+
+    @property
+    def rna_temp(self):
+        return self._rna_temp
+
+    @rna_temp.setter
+    def rna_temp(self, value):
+        if isinstance(value, str):
+            self._rna_temp = value
+        else:
+            raise ValueError("rna_temp must be a string.")
+        
+    @property
+    def dna_temp(self):
+        return self._dna_temp
+
+    @dna_temp.setter
+    def dna_temp(self, value):
+        if isinstance(value, str):
+            self._dna_temp = value
+        else:
+            raise ValueError("dna_temp must be a string.")
 
     @property
     def prot_lig_temp(self):
@@ -261,10 +288,16 @@ def combinations(field:str, system:System, predictor:Predictor): #predictor tmb 
 
     if field.lower() == "protein":
         return system.protein, predictor.prot_temp
-
     
     elif field.lower() == "ligand":
         return system.ligand, predictor.lig_temp
+    
+    elif field.lower() == "rna":
+            return system.rna, predictor.rna_temp
+
+    elif field.lower() == "dna":
+        return system.dna, predictor.dna_temp
+
 
 
 def gen_subinputs(system:System, predictor:Predictor): # Aquí també va predictor
@@ -274,7 +307,7 @@ def gen_subinputs(system:System, predictor:Predictor): # Aquí també va predict
     alphabet = alphabet_generator()
 
     list_subinputs = []
-    for field in ["protein","ligand"]:
+    for field in ["protein","ligand","rna","dna"]:
         try:
             data,txt = combinations(field, system, predictor)
         except:

@@ -69,8 +69,7 @@ def argparsing():
 def main():
     # Get arguments
     args = argparsing()
-    print(args.samples, type(args.samples))
-    print(args.recycles, type(args.recycles))
+    
     # Do things
     gen_predictor_inputs(args.input_json, args.predictors, args.samples, args.recycles)
 

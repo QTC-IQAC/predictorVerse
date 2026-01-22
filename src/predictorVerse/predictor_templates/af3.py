@@ -19,6 +19,19 @@ af3_lig_json = """      {{
         }}
       }}"""
 
+af3_rna_json = """ {{
+        "rna": {{
+          "id": "{letter}",
+          "sequence": "{seq}"
+        }}
+      }}"""
+
+af3_dna_json = """ {{
+        "dna": {{
+          "id": "{letter}",
+          "sequence": "{seq}"
+        }}
+      }}"""
 
 af3_json_template = """{{
     "name": "{system.name}",
@@ -72,6 +85,8 @@ runner_params = RunnerParams(header="csuc",
 af3_data = Predictor(name= "AF3",
             prot_temp= af3_prot_json,
             lig_temp= af3_lig_json,
+            rna_temp= af3_rna_json,
+            dna_temp= af3_dna_json,
             joiner=",\n",
             prot_lig_temp= af3_json_template,
             input_extension= ".json",
