@@ -13,10 +13,10 @@ You get:
 - A series of organized inputs and running scripts to make the predictions
 - Peace of mind
 
-# Requirements, intallation and stuff
+# Requirements and intallation
 ## Installation
 ```bash
-git clone blablabalba
+git clone https://github.com/QTC-IQAC/predictorVerse
 cd predictorVerse
 pip install .
 ```
