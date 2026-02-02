@@ -12,6 +12,8 @@ from predictorVerse.predictor_templates.boltz1 import boltz_data
 from predictorVerse.predictor_templates.omegafold import of_data
 from predictorVerse.predictor_templates.rfaa import rfaa_data
 from predictorVerse.predictor_templates.boltz1x import boltz1x_data
+from predictorVerse.predictor_templates.boltz2 import boltz2_data
+from predictorVerse.predictor_templates.rf3 import rf3_data
 
 
 predictors_library = { "AF3": af3_data, # AlphaFold3
@@ -19,7 +21,9 @@ predictors_library = { "AF3": af3_data, # AlphaFold3
                     "Boltz": boltz_data, # Boltz-1
                     "OF": of_data, # OmegaFold
                     "RFAA": rfaa_data, # RosettaFold All-Atom
-                    "Boltz1x": boltz1x_data # Boltz-1x
+                    "Boltz1x": boltz1x_data, # Boltz-1x
+                    "Boltz2": boltz2_data, # Boltz-2
+                    "RF3": rf3_data #RosettaFold3
 
 }
 
