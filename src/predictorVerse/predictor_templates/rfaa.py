@@ -74,7 +74,9 @@ def lig_smiles_to_sdf(system:System, predictor: Predictor, *args):
       mol = Chem.AddHs(mol) # adding explicit Hs for 3D generation
       # cid = AllChem.EmbedMolecule(mol) # returns the id of the generated conformer,
       #                                 # and -1 if no conformers were generated
-
+      AllChem.EmbedMolecule(mol, AllChem.ETKDG())
+      AllChem.UFFOptimizeMolecule(mol)
+      
       # AllChem.MMFFOptimizeMolecule(mol) # optimize molecule with MMFF94
       writer = Chem.SDWriter(sdf_file) # Write in .sdf file
       writer.write(mol)
