@@ -6,6 +6,7 @@ from predictorVerse.utils import Predictor, RunnerParams
 
 rf3_prot_chunk = """            {{
                 "seq": "{seq}",
+                "msa_path": "../Boltz2_aff/outputs/boltz_results_inputs/msa/{system.name}_unpaired_tmp_env/bfd.mgnify30.metaeuk30.smag30.a3m",
                 "chain_id": "{letter}"
             }}
 """
